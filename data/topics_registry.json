@@ -1,0 +1,20 @@
+{
+  "custom": [
+    {
+      "id": "vxworks",
+      "display_name": "VxWorks",
+      "description": "VxWorks 7",
+      "collection": "tech_vxworks",
+      "doc_dir": "./data/documents/vxworks",
+      "created_at": "2026-03-29"
+    },
+    {
+      "id": "linux_c_programming",
+      "display_name": "Linux C Programming",
+      "description": "System Programming",
+      "collection": "tech_linux_c_programming",
+      "doc_dir": "./data/documents/linux_c_programming",
+      "created_at": "2026-03-29"
+    }
+  ]
+}

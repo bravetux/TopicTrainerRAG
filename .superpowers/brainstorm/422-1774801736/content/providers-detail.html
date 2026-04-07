@@ -1,0 +1,101 @@
+<h2>Settings Tab — Provider Credential Fields</h2>
+<p class="subtitle">What each provider requires. Click a card to see its fields.</p>
+
+<div style="max-width:960px;margin:0 auto;display:grid;gap:12px">
+
+  <!-- AWS Bedrock -->
+  <div style="background:#1e293b;border:1px solid #166534;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">☁️ AWS Bedrock</span>
+      <span style="background:#14532d;color:#86efac;padding:1px 8px;border-radius:8px;font-size:0.7em">current default</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">Region</span> · <span style="color:#e2e8f0">us-east-1</span></div>
+      <div><span style="color:#64748b">Access Key ID</span> · <span style="color:#94a3b8">••••••••ABCD</span></div>
+      <div><span style="color:#64748b">Secret Access Key</span> · <span style="color:#94a3b8">••••••••••••</span></div>
+      <div><span style="color:#64748b">Model ID</span> · <span style="color:#e2e8f0">us.anthropic.claude-sonnet-4-20250514-v1:0</span></div>
+      <div><span style="color:#64748b">Guardrail ID</span> · <span style="color:#475569">optional</span></div>
+    </div>
+  </div>
+
+  <!-- Ollama -->
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">🦙 Local Ollama</span>
+      <span style="color:#475569;font-size:0.75em">no API key needed</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">Base URL</span> · <span style="color:#e2e8f0">http://localhost:11434</span></div>
+      <div><span style="color:#64748b">Model Name</span> · <span style="color:#e2e8f0">llama3.2</span> <span style="color:#475569">(e.g. mistral, codellama)</span></div>
+    </div>
+  </div>
+
+  <!-- LM Studio -->
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">🖥️ LM Studio</span>
+      <span style="color:#475569;font-size:0.75em">OpenAI-compatible local server</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">Base URL</span> · <span style="color:#e2e8f0">http://localhost:1234/v1</span></div>
+      <div><span style="color:#64748b">Model Name</span> · <span style="color:#475569">optional — uses loaded model</span></div>
+    </div>
+  </div>
+
+  <!-- OpenRouter -->
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">🔀 OpenRouter</span>
+      <span style="color:#475569;font-size:0.75em">routes to many providers</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">API Key</span> · <span style="color:#94a3b8">sk-or-••••••••</span></div>
+      <div><span style="color:#64748b">Model</span> · <span style="color:#e2e8f0">anthropic/claude-3-sonnet</span> <span style="color:#475569">(any OpenRouter model)</span></div>
+    </div>
+  </div>
+
+  <!-- Google Gemini -->
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">🔷 Google Gemini</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">API Key</span> · <span style="color:#94a3b8">AIza••••••••</span></div>
+      <div><span style="color:#64748b">Model</span> · <span style="color:#e2e8f0">gemini/gemini-1.5-pro</span></div>
+    </div>
+  </div>
+
+  <!-- OpenAI / ChatGPT -->
+  <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">🤖 OpenAI / ChatGPT</span>
+      <span style="color:#475569;font-size:0.75em">includes ChatGPT Enterprise (custom base URL)</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">API Key</span> · <span style="color:#94a3b8">sk-••••••••</span></div>
+      <div><span style="color:#64748b">Model</span> · <span style="color:#e2e8f0">gpt-4o</span></div>
+      <div><span style="color:#64748b">Base URL</span> · <span style="color:#475569">optional — for enterprise/Azure</span></div>
+      <div><span style="color:#64748b">Org ID</span> · <span style="color:#475569">optional</span></div>
+    </div>
+  </div>
+
+  <!-- Custom -->
+  <div style="background:#1e293b;border:1px solid #854d0e;border-radius:8px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-weight:600;color:#e2e8f0">🔧 Custom (OpenAI-compatible)</span>
+      <span style="color:#fbbf24;font-size:0.75em">any self-hosted or private endpoint</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.78em">
+      <div><span style="color:#64748b">Base URL</span> <span style="color:#ef4444">*</span> · <span style="color:#e2e8f0">https://my-api.company.com/v1</span></div>
+      <div><span style="color:#64748b">API Key</span> · <span style="color:#475569">optional</span></div>
+      <div><span style="color:#64748b">Model Name</span> · <span style="color:#475569">optional</span></div>
+    </div>
+  </div>
+
+  <!-- Save note -->
+  <div style="padding:10px 14px;background:#0f172a;border-radius:6px;font-size:0.75em;color:#475569;border-left:3px solid #334155">
+    💾 Settings saved to <code>data/settings.json</code> — persist across restarts. Values in <code>.env</code> always take priority.
+    After saving, click <strong>Apply & Restart Session</strong> to switch providers.
+  </div>
+
+</div>

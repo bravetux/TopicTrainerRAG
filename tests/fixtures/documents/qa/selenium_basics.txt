@@ -1,0 +1,36 @@
+Selenium WebDriver Guide
+
+Selenium WebDriver is a tool for automating web browsers. It provides a programming interface to create and execute test scripts.
+
+Locator Strategies:
+1. By ID - Most reliable locator. Use when elements have unique IDs.
+   Example: driver.find_element(By.ID, "username")
+
+2. By Name - Use when elements have name attributes.
+   Example: driver.find_element(By.NAME, "email")
+
+3. By CSS Selector - Flexible and fast. Supports complex queries.
+   Example: driver.find_element(By.CSS_SELECTOR, ".login-btn")
+
+4. By XPath - Most powerful but slowest. Use as last resort.
+   Example: driver.find_element(By.XPATH, "//button[@type='submit']")
+
+5. By Class Name - Use when element has a unique class.
+   Example: driver.find_element(By.CLASS_NAME, "submit-button")
+
+Explicit Waits:
+Use WebDriverWait with expected conditions instead of time.sleep().
+Example:
+  wait = WebDriverWait(driver, 10)
+  element = wait.until(EC.presence_of_element_located((By.ID, "result")))
+
+Page Object Model (POM):
+POM is a design pattern that creates an object repository for web UI elements.
+Each page has a corresponding class with methods representing actions on that page.
+Benefits: Reduces code duplication, improves maintainability.
+
+Best Practices:
+- Always use explicit waits over implicit waits
+- Use CSS selectors over XPath when possible
+- Keep test data separate from test logic
+- Use POM for any project with more than 5 pages

@@ -1,0 +1,42 @@
+AWS Glue Developer Guide
+
+AWS Glue is a serverless data integration service that makes it easy to discover, prepare, move, and integrate data from multiple sources.
+
+Core Components:
+
+1. Data Catalog
+The AWS Glue Data Catalog is a central metadata repository. It stores table definitions, job definitions, and other control information.
+- Crawlers automatically discover schema and register tables
+- Supports databases from S3, RDS, Redshift, and more
+
+2. Crawlers
+Crawlers connect to data stores and scan data to infer schema.
+- Run on demand or on a schedule
+- Create or update tables in the Data Catalog
+- Support S3, JDBC, DynamoDB, and more
+
+3. ETL Jobs
+Glue jobs run ETL scripts to transform data.
+Job types:
+- Spark: Distributed processing using Apache Spark
+- Python Shell: Lightweight Python scripts for simple transformations
+- Ray: For ML workloads
+
+4. DynamicFrame
+A DynamicFrame is similar to a Spark DataFrame but with additional metadata.
+- Handles inconsistent schemas natively
+- Use resolveChoice() to handle ambiguous types
+- Convert to DataFrame with toDF() when needed
+
+5. Job Bookmarks
+Job bookmarks track processed data to avoid reprocessing.
+Enable with: glueContext.create_dynamic_frame.from_catalog(
+    database="mydb", table_name="mytable",
+    additional_options={"jobBookmarkKeys": ["id"]}
+)
+
+Best Practices:
+- Enable job bookmarks for incremental loads
+- Use partitioning to improve query performance
+- Monitor job metrics in CloudWatch
+- Use Glue Studio for visual job authoring

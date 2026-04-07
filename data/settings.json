@@ -1,0 +1,21 @@
+{
+  "active_provider": "bedrock",
+  "model_name": "",
+  "base_url": "",
+  "temperature": 0.3,
+  "top_p": 0.9,
+  "max_tokens": 32768,
+  "topic_classifications": {
+    "tosca": "custom",
+    "playwright": "custom",
+    "aws_glue": "custom",
+    "spark": "custom",
+    "dbt": "custom",
+    "informatica": "custom",
+    "ssis": "custom",
+    "talend": "custom",
+    "adf": "custom",
+    "vxworks": "builtin",
+    "linux_c_programming": "builtin"
+  }
+}

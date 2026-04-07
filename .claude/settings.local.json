@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:strandsagents.com)",
+      "Bash(uv run:*)",
+      "Bash(bash \"C:\\\\Users\\\\vigne\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.6\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh\" --project-dir \"D:\\\\Downloads\\\\Projects\\\\ai_arena\\\\887\")",
+      "Bash(uv pip:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(bash .claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/scripts/start-server.sh --project-dir \"D:\\\\Downloads\\\\Projects\\\\ai_arena\\\\887\")",
+      "Bash(bash \"C:/Users/vigne/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"D:/Downloads/Projects/ai_arena/887\")",
+      "Bash(uv run python -c \":*)"
+    ]
+  }
+}

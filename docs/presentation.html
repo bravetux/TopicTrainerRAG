@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechTrainer AI — Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0d1117;
+    --surface:   #161b22;
+    --surface2:  #21262d;
+    --border:    #30363d;
+    --text:      #e6edf3;
+    --muted:     #8b949e;
+    --accent:    #58a6ff;
+    --green:     #3fb950;
+    --orange:    #d29922;
+    --red:       #f85149;
+    --purple:    #bc8cff;
+    --cyan:      #39d353;
+  }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); }
+
+  /* ── Slide container ─────────────────────────────── */
+  #deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 60px 80px;
+    opacity: 0; transform: translateX(60px);
+    transition: opacity .45s ease, transform .45s ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .slide.active  { opacity: 1; transform: translateX(0); pointer-events: all; z-index: 1; }
+  .slide.prev    { opacity: 0; transform: translateX(-60px); z-index: 0; }
+  .slide.left-align { align-items: flex-start; }
+
+  /* ── Typography ──────────────────────────────────── */
+  .slide-number {
+    position: absolute; top: 28px; right: 40px;
+    font-size: 12px; color: var(--muted); font-weight: 500;
+    letter-spacing: .05em;
+  }
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  .tag-blue   { background: rgba(88,166,255,.15);  color: var(--accent); border: 1px solid rgba(88,166,255,.3); }
+  .tag-green  { background: rgba(63,185,80,.15);   color: var(--green);  border: 1px solid rgba(63,185,80,.3); }
+  .tag-orange { background: rgba(210,153,34,.15);  color: var(--orange); border: 1px solid rgba(210,153,34,.3); }
+  .tag-purple { background: rgba(188,140,255,.15); color: var(--purple); border: 1px solid rgba(188,140,255,.3); }
+  .tag-red    { background: rgba(248,81,73,.15);   color: var(--red);    border: 1px solid rgba(248,81,73,.3); }
+
+  h1 { font-size: 52px; font-weight: 800; line-height: 1.1; letter-spacing: -.02em; }
+  h2 { font-size: 36px; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; margin-bottom: 8px; }
+  h3 { font-size: 22px; font-weight: 600; line-height: 1.3; }
+  p  { font-size: 17px; line-height: 1.7; color: var(--muted); }
+  .lead { font-size: 20px; line-height: 1.65; color: var(--muted); max-width: 700px; text-align: center; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Gradient headings ───────────────────────────── */
+  .grad-blue   { background: linear-gradient(135deg,#58a6ff,#79c0ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .grad-green  { background: linear-gradient(135deg,#3fb950,#56d364); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .grad-purple { background: linear-gradient(135deg,#bc8cff,#d2a8ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .grad-orange { background: linear-gradient(135deg,#f0883e,#ffa657); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+  /* ── Cards ───────────────────────────────────────── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .card-grid { display: grid; gap: 16px; width: 100%; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  /* ── Pill badge ──────────────────────────────────── */
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-blue   { background:#58a6ff30; color:#58a6ff; }
+  .badge-green  { background:#3fb95030; color:#3fb950; }
+  .badge-purple { background:#bc8cff30; color:#bc8cff; }
+  .badge-orange { background:#d2992230; color:#d29922; }
+  .badge-red    { background:#f8514930; color:#f85149; }
+
+  /* ── Lists ───────────────────────────────────────── */
+  ul.check { list-style: none; }
+  ul.check li { padding: 5px 0; font-size: 16px; color: var(--muted); }
+  ul.check li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+
+  ul.dot { list-style: none; }
+  ul.dot li { padding: 5px 0; font-size: 15px; color: var(--muted); }
+  ul.dot li::before { content: '• '; color: var(--accent); }
+
+  /* ── Navigation ──────────────────────────────────── */
+  #nav {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px; z-index: 100;
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 10px 20px; border-radius: 40px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  }
+  #nav button {
+    background: none; border: none; cursor: pointer;
+    color: var(--text); font-size: 18px; padding: 4px 8px;
+    border-radius: 6px; transition: background .2s;
+  }
+  #nav button:hover { background: var(--surface); }
+  #nav button:disabled { opacity: .3; cursor: default; }
+  #slide-indicator { font-size: 13px; color: var(--muted); min-width: 60px; text-align: center; font-weight: 500; }
+
+  /* ── Progress bar ────────────────────────────────── */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    transition: width .4s ease; z-index: 200;
+  }
+
+  /* ── Divider ─────────────────────────────────────── */
+  .divider { width: 60px; height: 4px; border-radius: 2px; margin: 16px auto; }
+  .div-blue   { background: var(--accent); }
+  .div-green  { background: var(--green); }
+  .div-purple { background: var(--purple); }
+  .div-orange { background: var(--orange); }
+
+  /* ── Title slide bg ──────────────────────────────── */
+  .title-bg {
+    position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(ellipse at 20% 50%, rgba(88,166,255,.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 30%, rgba(188,140,255,.06) 0%, transparent 60%);
+  }
+  .title-grid {
+    position: absolute; inset: 0; z-index: -1;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px; opacity: .25;
+  }
+
+  /* ── Architecture layers ──────────────────────────── */
+  .layer-stack { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+  .layer {
+    border-radius: 10px; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--border);
+  }
+  .layer-name { font-size: 14px; font-weight: 700; letter-spacing: .05em; }
+  .layer-files { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Tech stack row ──────────────────────────────── */
+  .tech-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .tech-row:last-child { border-bottom: none; }
+  .tech-label  { font-size: 14px; color: var(--muted); width: 160px; }
+  .tech-value  { font-size: 14px; font-weight: 600; flex: 1; }
+  .tech-version { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Code block ──────────────────────────────────── */
+  .code-block {
+    background: #0d1117; border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 16px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.6; overflow-x: auto; width: 100%;
+  }
+  .tok-kw  { color: #ff7b72; }
+  .tok-fn  { color: #d2a8ff; }
+  .tok-str { color: #a5d6ff; }
+  .tok-cmt { color: #8b949e; }
+  .tok-num { color: #79c0ff; }
+
+  /* ── Sequence steps ──────────────────────────────── */
+  .seq-step {
+    display: flex; align-items: center; gap: 12px; padding: 8px 0;
+    border-bottom: 1px solid rgba(48,54,61,.4);
+  }
+  .seq-step:last-child { border-bottom: none; }
+  .seq-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(88,166,255,.15); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .seq-text { font-size: 14px; color: var(--muted); }
+  .seq-text strong { color: var(--text); }
+
+  /* ── DB schema ───────────────────────────────────── */
+  .db-table {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; font-size: 12px; min-width: 160px;
+  }
+  .db-table-head { background: var(--surface2); padding: 8px 12px; font-weight: 700; font-size: 12px; color: var(--accent); border-bottom: 1px solid var(--border); }
+  .db-table-row { padding: 5px 12px; border-bottom: 1px solid rgba(48,54,61,.4); display: flex; justify-content: space-between; gap: 8px; }
+  .db-pk { color: var(--orange); font-weight: 600; }
+  .db-fk { color: var(--purple); }
+  .db-type { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+
+  /* ── UI Mockup ───────────────────────────────────── */
+  .mockup-window {
+    width: 100%; background: #1c2128; border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  }
+  .mockup-titlebar {
+    height: 36px; background: #161b22; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 16px; gap: 8px;
+  }
+  .dot-red { width:10px;height:10px;border-radius:50%;background:#f85149; }
+  .dot-yel { width:10px;height:10px;border-radius:50%;background:#d29922; }
+  .dot-grn { width:10px;height:10px;border-radius:50%;background:#3fb950; }
+  .url-bar {
+    flex: 1; height: 20px; background: var(--surface2); border-radius: 10px;
+    margin: 0 16px; display: flex; align-items: center; padding: 0 12px;
+    font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace;
+  }
+  .mockup-body { display: flex; height: 320px; }
+  .mockup-sidebar {
+    width: 200px; min-width: 200px; background: #161b22;
+    border-right: 1px solid var(--border); padding: 12px 10px; overflow: hidden;
+  }
+  .mockup-main { flex: 1; padding: 16px 20px; overflow: hidden; }
+  .sidebar-nav-item {
+    padding: 7px 10px; border-radius: 8px; font-size: 12px;
+    margin: 3px 0; cursor: pointer; display: flex; align-items: center; gap: 7px;
+  }
+  .sidebar-nav-item.active { background: rgba(88,166,255,.15); color: var(--accent); }
+  .sidebar-nav-item:not(.active) { color: var(--muted); }
+  .sidebar-section { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; padding: 10px 10px 4px; }
+  .mock-tab-bar { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  .mock-tab { padding: 7px 14px; font-size: 12px; cursor: pointer; border-bottom: 2px solid transparent; color: var(--muted); }
+  .mock-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .mock-input {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 6px 10px; font-size: 11px; color: var(--text); width: 100%; margin: 3px 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .mock-btn {
+    border: none; border-radius: 6px; padding: 6px 14px;
+    font-size: 11px; font-weight: 600; cursor: pointer;
+  }
+  .mock-btn-primary { background: var(--accent); color: #0d1117; }
+  .mock-btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .mock-select {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 10px; font-size: 11px; color: var(--text); width: 100%; margin: 3px 0;
+  }
+  .mock-chat-msg {
+    padding: 7px 12px; border-radius: 8px; font-size: 11px; margin: 4px 0; max-width: 90%;
+  }
+  .mock-chat-user { background: rgba(88,166,255,.15); color: var(--text); margin-left: auto; }
+  .mock-chat-ai   { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .mock-progress-bar { height: 5px; border-radius: 3px; background: var(--surface2); margin: 4px 0; overflow: hidden; }
+  .mock-progress-fill { height: 100%; border-radius: 3px; }
+
+  /* ── Agent box ───────────────────────────────────── */
+  .agent-box {
+    border-radius: 10px; padding: 10px 14px; border: 1px solid var(--border);
+    background: var(--surface); font-size: 13px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .agent-title { font-size: 13px; font-weight: 700; }
+  .agent-detail { font-size: 11px; color: var(--muted); }
+
+  /* ── Pipeline arrows ─────────────────────────────── */
+  .pipeline { display: flex; align-items: flex-start; gap: 0; width: 100%; }
+  .phase-block { flex: 1; border-radius: 10px; padding: 14px 12px; border: 1px solid; }
+  .phase-arrow { display: flex; align-items: center; padding: 0 6px; color: var(--muted); font-size: 20px; margin-top: 36px; }
+  .phase-title { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+  .phase-agent { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 6px; margin: 4px 0; font-size: 12px; font-weight: 500; background: rgba(255,255,255,.04); }
+
+  /* ── Roadmap ─────────────────────────────────────── */
+  .roadmap-item { display: flex; align-items: flex-start; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .roadmap-item:last-child { border-bottom: none; }
+  .roadmap-icon { font-size: 20px; min-width: 28px; text-align: center; margin-top: 2px; }
+  .roadmap-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .roadmap-desc { font-size: 13px; color: var(--muted); }
+
+  /* ── Big stat ────────────────────────────────────── */
+  .big-stat { text-align: center; }
+  .big-stat-num { font-size: 56px; font-weight: 800; line-height: 1; }
+  .big-stat-lbl { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+  /* ── Feature coverage matrix ─────────────────────── */
+  .matrix-row {
+    display: flex; align-items: center;
+    padding: 7px 10px; border-bottom: 1px solid rgba(48,54,61,.4);
+    font-size: 12px;
+  }
+  .matrix-row:last-child { border-bottom: none; }
+  .matrix-feature { width: 220px; font-weight: 600; color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+  .matrix-used-in { flex: 1; color: var(--muted); }
+  .matrix-purpose { flex: 1.2; color: var(--text); }
+
+  /* ── Accent line ─────────────────────────────────── */
+  .accent-line { width: 100%; height: 1px; background: linear-gradient(90deg,transparent,var(--accent),transparent); margin: 12px 0; opacity: .4; }
+
+  /* ── Utilities ───────────────────────────────────── */
+  .w-full  { width: 100%; }
+  .w-900   { width: 900px; max-width: 100%; }
+  .w-1000  { width: 1000px; max-width: 100%; }
+  .center  { text-align: center; }
+  .mt-4    { margin-top: 4px; }
+  .mt-8    { margin-top: 8px; }
+  .mt-12   { margin-top: 12px; }
+  .mt-16   { margin-top: 16px; }
+  .mt-20   { margin-top: 20px; }
+  .mt-28   { margin-top: 28px; }
+  .mb-4    { margin-bottom: 4px; }
+  .mb-8    { margin-bottom: 8px; }
+  .mb-16   { margin-bottom: 16px; }
+  .col2 { display: flex; gap: 24px; width: 100%; }
+  .col2 > * { flex: 1; }
+  .col3 { display: flex; gap: 20px; width: 100%; }
+  .col3 > * { flex: 1; }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="deck">
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 1 — TITLE
+══════════════════════════════════════════════════════ -->
+<section class="slide active center" id="s1">
+  <div class="title-bg"></div>
+  <div class="title-grid"></div>
+  <div class="slide-number">1 / 26</div>
+  <div class="tag tag-blue">AG-UC-0887</div>
+  <h1 style="font-size:58px;text-align:center;max-width:820px">
+    <span class="grad-blue">TechTrainer AI</span>
+  </h1>
+  <div class="divider div-blue mt-12"></div>
+  <p class="lead mt-12">Intelligent Employee Training Chatbot</p>
+  <p class="lead mt-8" style="font-size:15px">
+    Strands Agents SDK · AWS Bedrock · ChromaDB · SQLite · Streamlit
+  </p>
+  <div class="card-grid grid-4 mt-28" style="max-width:860px;width:100%">
+    <div class="card center">
+      <div style="font-size:36px;font-weight:800;color:var(--accent)">7</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">AI Agents</div>
+    </div>
+    <div class="card center">
+      <div style="font-size:36px;font-weight:800;color:var(--green)">10</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Skill Domains</div>
+    </div>
+    <div class="card center">
+      <div style="font-size:36px;font-weight:800;color:var(--purple)">7</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">LLM Providers</div>
+    </div>
+    <div class="card center">
+      <div style="font-size:36px;font-weight:800;color:var(--orange)">16</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">Strands Features</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 2 — INTRODUCTION
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s2">
+  <div class="slide-number">2 / 26</div>
+  <div class="tag tag-blue">Introduction</div>
+  <h2 class="grad-blue">What is TechTrainer AI?</h2>
+  <div class="divider div-blue"></div>
+  <p class="lead mt-8">A production-grade employee training chatbot built on the <strong style="color:var(--accent)">Strands Agents SDK</strong> — enabling employees to access, navigate, and interact with training materials across QA testing and data engineering technologies.</p>
+  <div class="col2 mt-28" style="max-width:920px;align-items:flex-start">
+    <div class="card">
+      <h3 style="color:var(--accent);margin-bottom:12px;font-size:16px">🎯 Purpose</h3>
+      <ul class="check">
+        <li>Instant Q&amp;A over all training documents</li>
+        <li>Interactive quizzes with scoring and explanations</li>
+        <li>Personalized learning path recommendations</li>
+        <li>AI-generated training module authoring</li>
+        <li>Visual progress dashboard per technology</li>
+        <li>Background document indexing with live progress</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);margin-bottom:12px;font-size:16px">🗂 Knowledge Base</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:8px 12px;background:var(--surface2);border-radius:8px">
+          <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">Any Topic</div>
+          <div style="font-size:12px;color:var(--muted)">Upload documents on any subject — the system indexes and retrieves from whatever topics you add</div>
+        </div>
+        <div style="padding:8px 12px;background:var(--surface2);border-radius:8px">
+          <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:4px">Any Document Format</div>
+          <div style="font-size:12px;color:var(--muted)">PDF · DOCX · PPTX · XLSX · TXT · Markdown</div>
+        </div>
+        <div style="padding:8px 12px;background:var(--surface2);border-radius:8px">
+          <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:4px">Fully Extensible</div>
+          <div style="font-size:12px;color:var(--muted)">Add custom topics at runtime via the Knowledge Base UI — no code changes required</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 3 — PROBLEM STATEMENT
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s3">
+  <div class="slide-number">3 / 26</div>
+  <div class="tag tag-red">Problem Statement</div>
+  <h2 class="grad-purple">The Employee Training Gap</h2>
+  <div class="divider div-purple"></div>
+  <div class="col3 mt-20" style="max-width:1000px">
+    <div class="card" style="border-color:rgba(248,81,73,.3)">
+      <div style="font-size:32px;margin-bottom:12px">📚</div>
+      <h3 style="color:var(--red);font-size:16px;margin-bottom:8px">Static Documents</h3>
+      <p style="font-size:14px">Training materials sit in SharePoint folders. Employees can't query them conversationally — they must read everything to find one answer.</p>
+    </div>
+    <div class="card" style="border-color:rgba(210,153,34,.3)">
+      <div style="font-size:32px;margin-bottom:12px">📉</div>
+      <h3 style="color:var(--orange);font-size:16px;margin-bottom:8px">No Progress Visibility</h3>
+      <p style="font-size:14px">Managers can't see which technologies employees understand. There's no quiz feedback loop to guide upskilling priorities.</p>
+    </div>
+    <div class="card" style="border-color:rgba(188,140,255,.3)">
+      <div style="font-size:32px;margin-bottom:12px">🔄</div>
+      <h3 style="color:var(--purple);font-size:16px;margin-bottom:8px">Manual Content Updates</h3>
+      <p style="font-size:14px">Writing new training modules for every tool version update requires dedicated L&amp;D effort. There's no way to auto-draft content from existing material.</p>
+    </div>
+  </div>
+  <div class="card mt-20" style="max-width:820px;border-color:rgba(88,166,255,.3);background:rgba(88,166,255,.05)">
+    <p style="font-size:16px;text-align:center">
+      <strong style="color:var(--accent)">TechTrainer AI</strong> solves this with a multi-agent system that answers questions, generates quizzes, recommends learning paths, and drafts content — all grounded in your own training documents.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 4 — FEATURES OVERVIEW
+══════════════════════════════════════════════════════ -->
+<section class="slide left-align" id="s4">
+  <div class="slide-number">4 / 26</div>
+  <div class="tag tag-green">Features</div>
+  <h2 class="grad-green" style="text-align:left">7 Core Features</h2>
+  <div class="divider div-green" style="margin-left:0"></div>
+  <div class="card-grid grid-3 mt-16 w-1000" style="gap:12px">
+    <div class="card" style="border-color:rgba(88,166,255,.3)">
+      <div style="font-size:26px;margin-bottom:8px">💬</div>
+      <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:5px">Chat Q&amp;A</div>
+      <p style="font-size:12px">RAG-powered answers cited from your documents. Persistent history across browser refreshes (ChromaDB, last 50 exchanges).</p>
+    </div>
+    <div class="card" style="border-color:rgba(63,185,80,.3)">
+      <div style="font-size:26px;margin-bottom:8px">📝</div>
+      <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:5px">Quiz Mode</div>
+      <p style="font-size:12px">Multi-choice quizzes with explanations, scored and written to SQLite. Select technology, difficulty, and question count.</p>
+    </div>
+    <div class="card" style="border-color:rgba(188,140,255,.3)">
+      <div style="font-size:26px;margin-bottom:8px">🗺️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--purple);margin-bottom:5px">Learning Path</div>
+      <p style="font-size:12px">Personalized study roadmap from quiz history: current level, recommended topics, weak/strong areas, estimated hours.</p>
+    </div>
+    <div class="card" style="border-color:rgba(210,153,34,.3)">
+      <div style="font-size:26px;margin-bottom:8px">✍️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--orange);margin-bottom:5px">Content Author</div>
+      <p style="font-size:12px">AI drafts full training modules in Markdown. Preview, download, or save to library. Sandboxed to ./data/generated/.</p>
+    </div>
+    <div class="card" style="border-color:rgba(88,166,255,.2)">
+      <div style="font-size:26px;margin-bottom:8px">🗄️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:5px">Knowledge Base</div>
+      <p style="font-size:12px">Upload documents per topic; background indexing with per-topic progress bar and Stop button. Custom topic support.</p>
+    </div>
+    <div class="card" style="border-color:rgba(63,185,80,.2)">
+      <div style="font-size:26px;margin-bottom:8px">📊</div>
+      <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:5px">Progress Dashboard</div>
+      <p style="font-size:12px">Sidebar with per-technology score bars, study streak, and session info updated in real time.</p>
+    </div>
+  </div>
+  <div class="card mt-12 w-1000" style="border-color:rgba(188,140,255,.2);background:rgba(188,140,255,.04);padding:12px 20px">
+    <div style="font-size:13px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px">⚙️</span>
+      <span><strong style="color:var(--purple)">Settings Tab:</strong> <span style="color:var(--muted)">Switch AI provider, configure embedding, adjust model parameters — all saved to .env / settings.json without restart.</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 5 — TECH STACK
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s5">
+  <div class="slide-number">5 / 26</div>
+  <div class="tag tag-blue">Technology</div>
+  <h2 class="grad-blue">Tech Stack</h2>
+  <div class="divider div-blue"></div>
+  <div class="col2 mt-20" style="max-width:940px;align-items:flex-start">
+    <div class="card w-full">
+      <h3 style="font-size:14px;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase">Core</h3>
+      <div class="tech-row"><span class="tech-label">Frontend</span><span class="tech-value">Streamlit</span><span class="tech-version">1.43+</span></div>
+      <div class="tech-row"><span class="tech-label">Agent Framework</span><span class="tech-value">Strands Agents SDK</span><span class="tech-version">strands-agents</span></div>
+      <div class="tech-row"><span class="tech-label">LLM (default)</span><span class="tech-value">AWS Bedrock — Claude Sonnet 4</span><span class="tech-version">BedrockModel</span></div>
+      <div class="tech-row"><span class="tech-label">LLM (others)</span><span class="tech-value">LiteLLM via litellm</span><span class="tech-version">LiteLLMModel</span></div>
+      <div class="tech-row"><span class="tech-label">Vector Store</span><span class="tech-value">ChromaDB (local, persistent)</span><span class="tech-version">PersistentClient</span></div>
+      <div class="tech-row"><span class="tech-label">Progress DB</span><span class="tech-value">SQLite</span><span class="tech-version">built-in</span></div>
+      <div class="tech-row"><span class="tech-label">Language</span><span class="tech-value">Python</span><span class="tech-version">3.10+</span></div>
+      <div class="tech-row"><span class="tech-label">Package Manager</span><span class="tech-value">uv</span><span class="tech-version">astral.sh/uv</span></div>
+    </div>
+    <div class="card w-full">
+      <h3 style="font-size:14px;color:var(--muted);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase">Document Parsing &amp; Embedding</h3>
+      <div class="tech-row"><span class="tech-label">PDF</span><span class="tech-value">pypdf</span><span class="tech-version"></span></div>
+      <div class="tech-row"><span class="tech-label">DOCX</span><span class="tech-value">python-docx</span><span class="tech-version"></span></div>
+      <div class="tech-row"><span class="tech-label">PPTX</span><span class="tech-value">python-pptx</span><span class="tech-version"></span></div>
+      <div class="tech-row"><span class="tech-label">XLSX</span><span class="tech-value">openpyxl</span><span class="tech-version"></span></div>
+      <div class="tech-row"><span class="tech-label">Chunking</span><span class="tech-value">RecursiveCharacterTextSplitter</span><span class="tech-version">LangChain</span></div>
+      <div class="tech-row"><span class="tech-label">Embeddings (default)</span><span class="tech-value">Bedrock Titan Embed v2</span><span class="tech-version">1024 dim</span></div>
+      <div class="tech-row"><span class="tech-label">Structured Output</span><span class="tech-value">Pydantic v2 BaseModel</span><span class="tech-version"></span></div>
+      <div class="tech-row"><span class="tech-label">Safety</span><span class="tech-value">Bedrock Guardrails + Hook Throttle</span><span class="tech-version">optional</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 6 — ARCHITECTURE LAYERS
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s6">
+  <div class="slide-number">6 / 26</div>
+  <div class="tag tag-blue">Architecture</div>
+  <h2 class="grad-blue">Layered Architecture</h2>
+  <div class="divider div-blue"></div>
+  <div class="layer-stack mt-20" style="max-width:880px">
+    <div class="layer" style="background:rgba(88,166,255,.08);border-color:rgba(88,166,255,.4)">
+      <div>
+        <div class="layer-name" style="color:var(--accent)">Presentation Layer</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px">4-tab UI · Sidebar dashboard · Streamlit widgets · stream_async()</div>
+      </div>
+      <div class="layer-files">app.py</div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:16px">↕</div>
+    <div class="layer" style="background:rgba(63,185,80,.08);border-color:rgba(63,185,80,.4)">
+      <div>
+        <div class="layer-name" style="color:var(--green)">Orchestration Layer</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px">Single entry point · intent routing · session management · streaming</div>
+      </div>
+      <div class="layer-files">src/agents/orchestrator.py</div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:16px">↕</div>
+    <div class="layer" style="background:rgba(188,140,255,.08);border-color:rgba(188,140,255,.4)">
+      <div>
+        <div class="layer-name" style="color:var(--purple)">Agent Layer</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px">6 specialist sub-agents · @tool wrappers · structured outputs · AgentSkills</div>
+      </div>
+      <div class="layer-files">src/agents/*.py</div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:16px">↕</div>
+    <div class="layer" style="background:rgba(210,153,34,.08);border-color:rgba(210,153,34,.4)">
+      <div>
+        <div class="layer-name" style="color:var(--orange)">Tools Layer</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px">Retrieval · ingestion · progress I/O · KB manager · provider factories</div>
+      </div>
+      <div class="layer-files">src/tools/*.py</div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:16px">↕</div>
+    <div class="layer" style="background:rgba(57,211,83,.08);border-color:rgba(57,211,83,.4)">
+      <div>
+        <div class="layer-name" style="color:var(--cyan)">Persistence Layer</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:3px">ChromaDB collections per topic · SQLite progress.db · FileSessionManager</div>
+      </div>
+      <div class="layer-files">data/chroma/ &nbsp; data/progress.db &nbsp; data/sessions/</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 7 — ORCHESTRATOR + SUB-AGENTS PATTERN
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s7">
+  <div class="slide-number">7 / 26</div>
+  <div class="tag tag-purple">Architecture</div>
+  <h2 class="grad-purple">Orchestrator + Sub-Agents as Tools</h2>
+  <div class="divider div-purple"></div>
+  <div class="pipeline mt-20 w-1000">
+    <div class="phase-block" style="background:rgba(88,166,255,.08);border-color:rgba(88,166,255,.5);flex:1.3">
+      <div class="phase-title" style="color:var(--accent)">Orchestrator</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Session state · routing · streaming</div>
+      <div class="phase-agent">🧠 BedrockModel / LiteLLMModel</div>
+      <div class="phase-agent">💬 SlidingWindow (10 turns)</div>
+      <div class="phase-agent">📂 FileSessionManager</div>
+      <div class="phase-agent">🔒 LoggingThrottleHook</div>
+      <div class="phase-agent">🔄 ModelRetryStrategy (3×)</div>
+    </div>
+    <div class="phase-arrow">→</div>
+    <div style="display:flex;flex-direction:column;gap:6px;flex:2">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">@tool Sub-Agents (stateless)</div>
+      <div class="agent-box" style="border-color:rgba(88,166,255,.3)">
+        <div class="agent-title" style="color:var(--accent)">📚 training_agent</div>
+        <div class="agent-detail">Queries any topic in the Knowledge Base → ChromaDB per-topic collections</div>
+      </div>
+      <div class="agent-box" style="border-color:rgba(210,153,34,.3)">
+        <div class="agent-title" style="color:var(--orange)">📝 quiz_agent</div>
+        <div class="agent-detail">Generates QuizResult structured output for any KB topic → scores to SQLite</div>
+      </div>
+      <div class="agent-box" style="border-color:rgba(188,140,255,.3)">
+        <div class="agent-title" style="color:var(--purple)">🗺️ learning_path_agent &nbsp; ✍️ content_author_agent &nbsp; 📊 progress_agent</div>
+        <div class="agent-detail">LearningPath · TrainingModule · progress R/W via progress_reader / progress_writer</div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-16" style="max-width:960px;border-color:rgba(88,166,255,.2);background:rgba(88,166,255,.04)">
+    <p style="font-size:13px;text-align:center">
+      <strong style="color:var(--accent)">Pattern:</strong> Each sub-agent is a <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--purple)">@tool</code> function. The Orchestrator calls it like a tool — Strands instantiates a fresh agent inside, runs it, and returns the result. Sub-agents are <strong style="color:var(--text)">topic-agnostic</strong> — they retrieve from whichever KB collections exist.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 8 — REQUEST FLOW SEQUENCE
+══════════════════════════════════════════════════════ -->
+<section class="slide left-align" id="s8">
+  <div class="slide-number">8 / 26</div>
+  <div class="tag tag-blue">Architecture</div>
+  <h2 class="grad-blue" style="text-align:left">Request Execution Flow</h2>
+  <div class="divider div-blue" style="margin-left:0"></div>
+  <div class="col2 mt-12 w-1000" style="align-items:flex-start">
+    <div>
+      <div class="seq-step"><div class="seq-num">1</div><div class="seq-text"><strong>Browser session starts</strong> — uuid4 session_id generated, stored in st.session_state</div></div>
+      <div class="seq-step"><div class="seq-num">2</div><div class="seq-text"><strong>User types message</strong> in Chat tab → st.chat_input captures it</div></div>
+      <div class="seq-step"><div class="seq-num">3</div><div class="seq-text"><strong>stream_async()</strong> called on Orchestrator with user message + invocation_state</div></div>
+      <div class="seq-step"><div class="seq-num">4</div><div class="seq-text"><strong>Orchestrator classifies intent</strong> — routes to matching @tool sub-agent</div></div>
+      <div class="seq-step"><div class="seq-num">5</div><div class="seq-text"><strong>Sub-agent instantiated</strong> fresh — calls retrieve_qa / retrieve_etl / progress_reader</div></div>
+      <div class="seq-step"><div class="seq-num">6</div><div class="seq-text"><strong>ChromaDB semantic search</strong> returns top-k relevant chunks with citations</div></div>
+      <div class="seq-step"><div class="seq-num">7</div><div class="seq-text"><strong>LLM call</strong> (Bedrock / LiteLLM) synthesizes answer grounded in retrieved content</div></div>
+      <div class="seq-step"><div class="seq-num">8</div><div class="seq-text"><strong>Tokens stream back</strong> to UI via st.write_stream — Sources section appended</div></div>
+      <div class="seq-step"><div class="seq-num">9</div><div class="seq-text"><strong>Exchange saved</strong> to ChromaDB chat_history collection for next session reload</div></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">Session Initialization</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-kw">if</span> <span class="tok-str">"session_id"</span> <span class="tok-kw">not in</span> st.session_state:
+    st.session_state.session_id = <span class="tok-fn">str</span>(<span class="tok-fn">uuid4</span>())
+
+<span class="tok-cmt"># Passed to agent via invocation_state</span>
+<span class="tok-kw">async for</span> chunk <span class="tok-kw">in</span> agent.<span class="tok-fn">stream_async</span>(
+    msg,
+    invocation_state={<span class="tok-str">"session_id"</span>: session_id}
+):
+    <span class="tok-kw">yield</span> chunk
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">Conversation Management</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Orchestrator</span><span style="color:var(--text)">SlidingWindow (10)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">QA / ETL Agents</span><span style="color:var(--text)">SlidingWindow (15)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Quiz / Content Author</span><span style="color:var(--text)">Summarizing (0.3–0.4)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--muted)">LP / Progress Agents</span><span style="color:var(--text)">NullConversationManager</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 9 — ORCHESTRATOR AGENT
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s9">
+  <div class="slide-number">9 / 26</div>
+  <div class="tag tag-blue">Agent Design</div>
+  <h2 class="grad-blue">Orchestrator Agent</h2>
+  <div class="divider div-blue"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px">Configuration</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-fn">Agent</span>(
+  model=<span class="tok-fn">BedrockModel</span>(
+    model_id=<span class="tok-str">"us.anthropic.claude-sonnet-4..."</span>,
+    temperature=<span class="tok-num">0.3</span>, max_tokens=<span class="tok-num">32768</span>,
+    guardrail_id=os.<span class="tok-fn">getenv</span>(<span class="tok-str">"BEDROCK_GUARDRAIL_ID"</span>),
+  ),
+  tools=[qa_training_agent, etl_training_agent,
+         quiz_agent, learning_path_agent,
+         content_author_agent, progress_agent],
+  conversation_manager=<span class="tok-fn">SlidingWindowConversationManager</span>(
+    window_size=<span class="tok-num">10</span>),
+  session_manager=<span class="tok-fn">FileSessionManager</span>(
+    session_id=session_id,
+    storage_dir=<span class="tok-str">"./data/sessions"</span>),
+  hooks=[<span class="tok-fn">LoggingThrottleHook</span>()],
+  retry_strategy=<span class="tok-fn">ModelRetryStrategy</span>(max_attempts=<span class="tok-num">3</span>),
+  trace_attributes={<span class="tok-str">"session.id"</span>: session_id},
+)
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">Routing Rules (System Prompt)</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:8px;align-items:flex-start"><span class="badge badge-blue">Training Q&amp;A</span><span style="color:var(--muted)">→ training_agent (any KB topic)</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span class="badge badge-orange">Quiz</span><span style="color:var(--muted)">→ quiz_agent</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span class="badge badge-purple">Learning Path</span><span style="color:var(--muted)">→ learning_path_agent</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span class="badge badge-green">Content Creation</span><span style="color:var(--muted)">→ content_author_agent</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span class="badge badge-blue">Score / Progress</span><span style="color:var(--muted)">→ progress_agent</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">Key Constraints</div>
+        <ul class="dot" style="font-size:12px">
+          <li>Always cite source documents</li>
+          <li>Never fabricate content not in training materials</li>
+          <li>Max 10 tool calls per turn (throttle hook)</li>
+          <li>60-second sub-agent timeout via agent.cancel()</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 10 — TRAINING AGENT (TOPIC-AGNOSTIC)
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s10">
+  <div class="slide-number">10 / 26</div>
+  <div class="tag tag-purple">Agent Design</div>
+  <h2 class="grad-purple">Training Agent — Any Knowledge Base</h2>
+  <div class="divider div-purple"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(88,166,255,.3)">
+        <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:10px">📚 training_agent</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">A single topic-agnostic agent that retrieves from <strong style="color:var(--text)">any indexed Knowledge Base collection</strong>. The topic is determined at runtime from the user's query and the available ChromaDB collections — not hardcoded into the agent.</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">training_agent</span>(
+    query:  <span class="tok-fn">str</span>,
+    topic:  <span class="tok-fn">str</span>,   <span class="tok-cmt"># resolved from KB registry</span>
+) -> <span class="tok-fn">str</span>:
+    <span class="tok-str">"""Answer questions using any indexed topic.
+    Retrieves from the matching ChromaDB collection
+    and returns cited content."""</span>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(63,185,80,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">AgentSkills — Pluggable Domain Files</div>
+        <p style="font-size:12px;margin-bottom:6px">Skill files (.md) provide agent-level hints about a topic's conventions and terminology. They are <strong style="color:var(--text)">optional</strong> and loaded dynamically from the KB registry — not fixed to any built-in list.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px">
+          <span class="badge badge-blue">topic_a.md</span>
+          <span class="badge badge-blue">topic_b.md</span>
+          <span class="badge badge-green">topic_c.md</span>
+          <span class="badge badge-green">topic_d.md</span>
+          <span class="badge badge-purple">your_topic.md</span>
+          <span style="font-size:11px;color:var(--muted);padding:3px 6px">… one per KB topic</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(210,153,34,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:10px">Topic Resolution Flow</div>
+        <div class="seq-step"><div class="seq-num">1</div><div class="seq-text"><strong>User asks</strong> a question in the Chat tab</div></div>
+        <div class="seq-step"><div class="seq-num">2</div><div class="seq-text"><strong>Orchestrator</strong> identifies the relevant topic from context</div></div>
+        <div class="seq-step"><div class="seq-num">3</div><div class="seq-text"><strong>training_agent</strong> called with topic parameter</div></div>
+        <div class="seq-step"><div class="seq-num">4</div><div class="seq-text"><strong>retrieve()</strong> queries <span class="mono" style="font-size:10px">tech_&lt;topic&gt;</span> ChromaDB collection</div></div>
+        <div class="seq-step"><div class="seq-num">5</div><div class="seq-text"><strong>Response cited</strong> from matching documents</div></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">Tools</div>
+        <div style="display:flex;flex-direction:column;gap:5px;font-size:12px">
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span class="badge badge-orange">retrieve</span><span style="color:var(--muted)">semantic search on any collection</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span class="badge badge-blue">http_request</span><span style="color:var(--muted)">optional web fetch</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--muted)">Conversation</span><span>SlidingWindow (15)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 11 — QUIZ AGENT
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s11">
+  <div class="slide-number">11 / 26</div>
+  <div class="tag tag-orange">Agent Design</div>
+  <h2 class="grad-orange">Quiz Agent — Structured Output</h2>
+  <div class="divider div-orange"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">QuizQuestion Model</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-kw">class</span> <span class="tok-fn">QuizQuestion</span>(BaseModel):
+    question:       <span class="tok-fn">str</span>
+    options:        list[<span class="tok-fn">str</span>]    <span class="tok-cmt"># exactly 4</span>
+    correct_answer: <span class="tok-fn">str</span>       <span class="tok-cmt"># matches one option</span>
+    explanation:    <span class="tok-fn">str</span>
+    difficulty:     <span class="tok-fn">Literal</span>[<span class="tok-str">"beginner"</span>,
+                              <span class="tok-str">"intermediate"</span>,
+                              <span class="tok-str">"advanced"</span>]
+    topic:          <span class="tok-fn">str</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">QuizResult Model</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-kw">class</span> <span class="tok-fn">QuizResult</span>(BaseModel):
+    technology:     <span class="tok-fn">str</span>
+    difficulty:     <span class="tok-fn">str</span>
+    questions:      list[<span class="tok-fn">QuizQuestion</span>]
+    total_questions: <span class="tok-fn">int</span>
+    passing_score:  <span class="tok-fn">int</span>  <span class="tok-cmt"># % default 70</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(210,153,34,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:10px">Quiz UI Flow</div>
+        <div class="seq-step"><div class="seq-num">1</div><div class="seq-text"><strong>Select</strong> technology, difficulty, count (5/10/15)</div></div>
+        <div class="seq-step"><div class="seq-num">2</div><div class="seq-text"><strong>Generate</strong> → quiz_agent called → QuizResult returned</div></div>
+        <div class="seq-step"><div class="seq-num">3</div><div class="seq-text"><strong>Render</strong> MCQ as radio buttons per question</div></div>
+        <div class="seq-step"><div class="seq-num">4</div><div class="seq-text"><strong>Submit</strong> → score displayed with explanations</div></div>
+        <div class="seq-step"><div class="seq-num">5</div><div class="seq-text"><strong>Save</strong> score to SQLite via progress_agent</div></div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">Agent Config</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Tools</span><span>retrieve_qa · retrieve_etl</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Conversation</span><span>Summarizing (0.3)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--muted)">Output</span><span style="color:var(--orange)">structured_output_model</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 12 — LEARNING PATH + CONTENT AUTHOR AGENTS
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s12">
+  <div class="slide-number">12 / 26</div>
+  <div class="tag tag-purple">Agent Design</div>
+  <h2 class="grad-purple">Learning Path &amp; Content Author Agents</h2>
+  <div class="divider div-purple"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div class="card" style="border-color:rgba(188,140,255,.3)">
+      <div style="font-size:14px;font-weight:700;color:var(--purple);margin-bottom:10px">🗺️ Learning Path Agent</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><span class="mono" style="font-size:11px">src/agents/learning_path_agent.py</span></div>
+      <div class="code-block" style="font-size:11px;padding:10px;margin-bottom:8px">
+<span class="tok-kw">class</span> <span class="tok-fn">LearningPath</span>(BaseModel):
+  session_id:          <span class="tok-fn">str</span>
+  current_level:       <span class="tok-fn">str</span>
+  recommended_topics:  list[<span class="tok-fn">str</span>]   <span class="tok-cmt"># ordered</span>
+  next_milestone:      <span class="tok-fn">str</span>
+  estimated_hours:     <span class="tok-fn">float</span>
+  weak_areas:          list[<span class="tok-fn">str</span>]
+  strong_areas:        list[<span class="tok-fn">str</span>]
+      </div>
+      <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Tool</span><span>progress_reader</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:var(--muted)">Reads</span><span>quiz history from SQLite</span></div>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(210,153,34,.3)">
+      <div style="font-size:14px;font-weight:700;color:var(--orange);margin-bottom:10px">✍️ Content Author Agent</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px"><span class="mono" style="font-size:11px">src/agents/content_author_agent.py</span></div>
+      <div class="code-block" style="font-size:11px;padding:10px;margin-bottom:8px">
+<span class="tok-kw">class</span> <span class="tok-fn">TrainingModule</span>(BaseModel):
+  title:               <span class="tok-fn">str</span>
+  technology:          <span class="tok-fn">str</span>
+  difficulty:          <span class="tok-fn">Literal</span>[...]
+  duration_minutes:    <span class="tok-fn">int</span>
+  learning_objectives: list[<span class="tok-fn">str</span>]
+  content:             <span class="tok-fn">str</span>  <span class="tok-cmt"># full Markdown</span>
+  exercises:           list[<span class="tok-fn">str</span>]
+  references:          list[<span class="tok-fn">str</span>]
+      </div>
+      <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Tools</span><span>retrieve_qa · retrieve_etl · file_write</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Conversation</span><span>Summarizing (0.4)</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:var(--muted)">Sandbox</span><span style="color:var(--red)">./data/generated/ only</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 13 — PROGRESS AGENT + SQLITE SCHEMA
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s13">
+  <div class="slide-number">13 / 26</div>
+  <div class="tag tag-green">Agent Design</div>
+  <h2 class="grad-green">Progress Agent &amp; SQLite Schema</h2>
+  <div class="divider div-green"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">📊 Progress Agent</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Reads and writes quiz scores, topics studied, learning streaks</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px"><span class="badge badge-green">progress_reader</span><span class="badge badge-orange">progress_writer</span></div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-cmt"># progress_writer signature</span>
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">progress_writer</span>(
+    session_id:      <span class="tok-fn">str</span>,
+    technology:      <span class="tok-fn">str</span>,
+    difficulty:      <span class="tok-fn">str</span>,
+    score:           <span class="tok-fn">int</span>,    <span class="tok-cmt"># 0–100</span>
+    total_questions: <span class="tok-fn">int</span>,
+    correct_answers: <span class="tok-fn">int</span>,
+) -> <span class="tok-fn">str</span>: ...
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="db-table w-full">
+        <div class="db-table-head">quiz_results</div>
+        <div class="db-table-row"><span class="db-pk">id</span><span class="db-type">INTEGER PK</span></div>
+        <div class="db-table-row"><span>session_id</span><span class="db-type">TEXT NOT NULL</span></div>
+        <div class="db-table-row"><span>technology</span><span class="db-type">TEXT NOT NULL</span></div>
+        <div class="db-table-row"><span>difficulty</span><span class="db-type">TEXT NOT NULL</span></div>
+        <div class="db-table-row"><span>score</span><span class="db-type">INTEGER (0–100)</span></div>
+        <div class="db-table-row"><span>total_questions</span><span class="db-type">INTEGER</span></div>
+        <div class="db-table-row"><span>correct_answers</span><span class="db-type">INTEGER</span></div>
+        <div class="db-table-row"><span>timestamp</span><span class="db-type">DATETIME DEFAULT NOW</span></div>
+      </div>
+      <div class="db-table w-full">
+        <div class="db-table-head">topics_studied</div>
+        <div class="db-table-row"><span class="db-pk">id</span><span class="db-type">INTEGER PK</span></div>
+        <div class="db-table-row"><span>session_id</span><span class="db-type">TEXT NOT NULL</span></div>
+        <div class="db-table-row"><span>topic</span><span class="db-type">TEXT NOT NULL</span></div>
+        <div class="db-table-row"><span>technology</span><span class="db-type">TEXT NOT NULL</span></div>
+        <div class="db-table-row"><span>timestamp</span><span class="db-type">DATETIME DEFAULT NOW</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 14 — DOCUMENT INGESTION PIPELINE
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s14">
+  <div class="slide-number">14 / 26</div>
+  <div class="tag tag-orange">Data Pipeline</div>
+  <h2 class="grad-orange">Document Ingestion Pipeline</h2>
+  <div class="divider div-orange"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:10px">Supported Formats</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="badge badge-blue">.pdf</span><span style="font-size:12px;color:var(--muted)">pypdf — text per page</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="badge badge-green">.docx</span><span style="font-size:12px;color:var(--muted)">python-docx — paragraphs + tables</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="badge badge-orange">.pptx</span><span style="font-size:12px;color:var(--muted)">python-pptx — slide text + notes</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="badge badge-purple">.xlsx</span><span style="font-size:12px;color:var(--muted)">openpyxl — all sheets as text</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0"><span class="badge badge-blue">.txt .md</span><span style="font-size:12px;color:var(--muted)">built-in — direct read</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">Chunking Strategy</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Chunk size</span><span>1000 tokens</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Overlap</span><span>200 tokens</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:var(--muted)">Splitter</span><span>RecursiveCharacterTextSplitter</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px">Embedding + Storage</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Default model</span><span>amazon.titan-embed-text-v2:0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Dimension</span><span>1024</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Called via</span><span>boto3 / embedding_manager.py</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:var(--muted)">Store</span><span>ChromaDB — 1 collection per topic</span></div>
+        </div>
+        <div style="margin-top:10px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:5px">Chunk metadata</div>
+          <div class="code-block" style="font-size:11px;padding:8px">
+{ source_file, page_number,
+  collection, ingested_at }
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">Invocation</div>
+        <div class="code-block" style="font-size:11px;padding:8px">
+<span class="tok-cmt"># Manual full reindex</span>
+uv run python -m src.tools.document_ingestion --reindex
+
+<span class="tok-cmt"># Auto on startup (empty collection only)</span>
+<span class="tok-cmt"># Called by app.py</span>
+
+<span class="tok-cmt"># Via Knowledge Base UI</span>
+<span class="tok-cmt"># per-topic, background thread + progress bar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 15 — KNOWLEDGE BASE UI
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s15">
+  <div class="slide-number">15 / 26</div>
+  <div class="tag tag-green">Knowledge Base</div>
+  <h2 class="grad-green">Knowledge Base — Per-Technology RAG</h2>
+  <div class="divider div-green"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(63,185,80,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">Any Number of Topics</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Each topic gets its own ChromaDB collection. There is no fixed list — topics are defined by what you index.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <div style="padding:6px 10px;background:rgba(88,166,255,.08);border-radius:6px;border:1px solid rgba(88,166,255,.2);font-size:12px;font-weight:600;color:var(--accent)">Topic A</div>
+          <div style="padding:6px 10px;background:rgba(88,166,255,.08);border-radius:6px;border:1px solid rgba(88,166,255,.2);font-size:12px;font-weight:600;color:var(--accent)">Topic B</div>
+          <div style="padding:6px 10px;background:rgba(63,185,80,.08);border-radius:6px;border:1px solid rgba(63,185,80,.2);font-size:12px;font-weight:600;color:var(--green)">Topic C</div>
+          <div style="padding:6px 10px;background:rgba(63,185,80,.08);border-radius:6px;border:1px solid rgba(63,185,80,.2);font-size:12px;font-weight:600;color:var(--green)">Topic D</div>
+          <div style="padding:6px 10px;background:var(--surface2);border-radius:6px;font-size:12px;font-weight:600;color:var(--muted);grid-column:span 2;text-align:center">+ unlimited custom topics…</div>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(188,140,255,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px">Custom Topics</div>
+        <p style="font-size:12px;margin-bottom:6px">User-defined topics persisted in <span class="mono" style="font-size:11px">data/topics_registry.json</span>. Each gets its own ChromaDB collection and document directory.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="badge badge-green">AVAILABLE</span> <span style="font-size:11px;color:var(--muted)">collection exists + count &gt; 0</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <span class="badge badge-orange">EMPTY</span> <span style="font-size:11px;color:var(--muted)">collection exists but empty</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <span class="badge badge-red">NOT INDEXED</span> <span style="font-size:11px;color:var(--muted)">no collection in ChromaDB</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px">Background Indexing Flow</div>
+        <div class="seq-step"><div class="seq-num">1</div><div class="seq-text"><strong>Select topic</strong> from dropdown</div></div>
+        <div class="seq-step"><div class="seq-num">2</div><div class="seq-text"><strong>Upload files</strong> (PDF, DOCX, PPTX, XLSX, TXT, MD)</div></div>
+        <div class="seq-step"><div class="seq-num">3</div><div class="seq-text"><strong>Click Index</strong> → background thread starts</div></div>
+        <div class="seq-step"><div class="seq-num">4</div><div class="seq-text"><strong>Progress bar</strong> updates file-by-file with Stop button</div></div>
+        <div class="seq-step"><div class="seq-num">5</div><div class="seq-text"><strong>Status badge</strong> updates to AVAILABLE on completion</div></div>
+        <div class="seq-step"><div class="seq-num">6</div><div class="seq-text"><strong>Dropdowns</strong> in Chat, Quiz, LP, Content Author refresh automatically</div></div>
+      </div>
+      <div class="card" style="border-color:rgba(88,166,255,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px">Index All</div>
+        <p style="font-size:12px;color:var(--muted)">Single-click to trigger background indexing for all topics simultaneously. Each shows its own progress bar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 16 — MULTI-PROVIDER SUPPORT
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s16">
+  <div class="slide-number">16 / 26</div>
+  <div class="tag tag-blue">Configuration</div>
+  <h2 class="grad-blue">Multi-Provider LLM &amp; Embedding</h2>
+  <div class="divider div-blue"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(88,166,255,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px">LLM Providers (7)</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(88,166,255,.08);border-radius:8px;border:1px solid rgba(88,166,255,.2)">
+            <span style="font-size:13px;font-weight:600">AWS Bedrock</span>
+            <span class="badge badge-green">Default · BedrockModel</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">Ollama</span>
+            <span style="font-size:11px;color:var(--muted)">LiteLLMModel — local</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">LM Studio</span>
+            <span style="font-size:11px;color:var(--muted)">LiteLLMModel — local</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">OpenRouter</span>
+            <span style="font-size:11px;color:var(--muted)">LiteLLMModel — cloud</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">Google Gemini</span>
+            <span style="font-size:11px;color:var(--muted)">LiteLLMModel — cloud</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">OpenAI</span>
+            <span style="font-size:11px;color:var(--muted)">LiteLLMModel — cloud</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">Custom</span>
+            <span style="font-size:11px;color:var(--muted)">OpenAI-compatible endpoint</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(63,185,80,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">Embedding Providers (4)</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:rgba(63,185,80,.08);border-radius:8px;border:1px solid rgba(63,185,80,.2)">
+            <span style="font-size:13px;font-weight:600">Bedrock Titan</span>
+            <span class="badge badge-green">Default</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">Ollama</span><span style="font-size:11px;color:var(--muted)">nomic-embed-text (default)</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">OpenAI</span><span style="font-size:11px;color:var(--muted)">text-embedding-3-small (default)</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:8px">
+            <span style="font-size:13px;font-weight:600">Custom</span><span style="font-size:11px;color:var(--muted)">OpenAI-compatible endpoint</span>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(248,81,73,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px">⚠️ Embedding Change Note</div>
+        <p style="font-size:12px">Changing the embedding provider requires re-indexing all Knowledge Base collections. ChromaDB dimension mismatch will cause retrieval failure.</p>
+      </div>
+      <div class="card mt-8">
+        <div style="font-size:12px;color:var(--muted)">Config priority: <strong style="color:var(--text)">.env</strong> &gt; <strong style="color:var(--text)">data/settings.json</strong> &gt; built-in defaults. Secret keys never written to settings.json.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 17 — STREAMLIT UI — CHAT TAB
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s17">
+  <div class="slide-number">17 / 26</div>
+  <div class="tag tag-green">UI Walkthrough</div>
+  <h2 class="grad-green">Chat &amp; Quiz Tabs</h2>
+  <div class="divider div-green"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Chat Tab</div>
+      <div class="mockup-window">
+        <div class="mockup-titlebar"><div class="dot-red"></div><div class="dot-yel"></div><div class="dot-grn"></div><div class="url-bar">localhost:8501</div></div>
+        <div class="mockup-body">
+          <div class="mockup-sidebar">
+            <div class="sidebar-section">Progress</div>
+            <div style="font-size:11px;color:var(--muted);padding:4px 10px">Topic A</div>
+            <div class="mock-progress-bar"><div class="mock-progress-fill" style="width:72%;background:var(--green)"></div></div>
+            <div style="font-size:11px;color:var(--muted);padding:4px 10px">Topic B</div>
+            <div class="mock-progress-bar"><div class="mock-progress-fill" style="width:45%;background:var(--accent)"></div></div>
+            <div style="font-size:11px;color:var(--muted);padding:4px 10px">Topic C</div>
+            <div class="mock-progress-bar"><div class="mock-progress-fill" style="width:88%;background:var(--orange)"></div></div>
+            <div style="font-size:11px;color:var(--muted);padding:4px 10px">Topic D</div>
+            <div class="mock-progress-bar"><div class="mock-progress-fill" style="width:30%;background:var(--purple)"></div></div>
+            <div class="sidebar-section" style="margin-top:8px">Session</div>
+            <div style="font-size:10px;color:var(--muted);padding:4px 10px;font-family:'JetBrains Mono',monospace">abc1-2d3e...</div>
+          </div>
+          <div class="mockup-main">
+            <div class="mock-tab-bar">
+              <div class="mock-tab active">💬 Chat</div>
+              <div class="mock-tab">📝 Quiz</div>
+              <div class="mock-tab">🗺️ Learning Path</div>
+              <div class="mock-tab">✍️ Content Author</div>
+            </div>
+            <div style="height:220px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end">
+              <div class="mock-chat-msg mock-chat-user">Explain the key concepts in Topic A</div>
+              <div class="mock-chat-msg mock-chat-ai">Based on your uploaded documents, the key concepts are... <span style="color:var(--accent);font-size:10px">[src: topic_a_guide.pdf]</span></div>
+              <div style="display:flex;gap:6px;margin-top:6px">
+                <input class="mock-input" style="flex:1" placeholder="Ask a training question..." />
+                <button class="mock-btn mock-btn-primary" style="white-space:nowrap">Ask AI</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Quiz Tab</div>
+      <div class="mockup-window">
+        <div class="mockup-titlebar"><div class="dot-red"></div><div class="dot-yel"></div><div class="dot-grn"></div><div class="url-bar">localhost:8501</div></div>
+        <div class="mockup-body">
+          <div class="mockup-sidebar">
+            <div class="sidebar-section">Progress</div>
+            <div style="font-size:11px;color:var(--muted);padding:4px 10px">Topic A</div>
+            <div class="mock-progress-bar"><div class="mock-progress-fill" style="width:72%;background:var(--green)"></div></div>
+            <div style="font-size:11px;color:var(--muted);padding:4px 10px">Topic B</div>
+            <div class="mock-progress-bar"><div class="mock-progress-fill" style="width:55%;background:var(--purple)"></div></div>
+          </div>
+          <div class="mockup-main">
+            <div class="mock-tab-bar">
+              <div class="mock-tab">💬 Chat</div>
+              <div class="mock-tab active">📝 Quiz</div>
+              <div class="mock-tab">🗺️ Learning Path</div>
+              <div class="mock-tab">✍️ Content</div>
+            </div>
+            <div style="padding-top:4px">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Topic</div>
+              <select class="mock-select"><option>Topic A</option></select>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:2px;margin-top:4px">Difficulty</div>
+              <select class="mock-select"><option>Intermediate</option></select>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:2px;margin-top:4px">Questions</div>
+              <select class="mock-select"><option>10</option></select>
+              <button class="mock-btn mock-btn-primary w-full mt-8" style="width:100%;margin-top:8px">Generate Quiz</button>
+              <div style="margin-top:8px;padding:8px;background:var(--surface2);border-radius:6px;font-size:11px">
+                <div style="color:var(--text);font-weight:600;margin-bottom:4px">Q1. What is the core concept covered in this topic?</div>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <div style="color:var(--muted)">○ Option A</div>
+                  <div style="color:var(--accent)">● Option B (correct)</div>
+                  <div style="color:var(--muted)">○ Option C</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 18 — STREAMLIT UI — KB + SETTINGS
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s18">
+  <div class="slide-number">18 / 26</div>
+  <div class="tag tag-purple">UI Walkthrough</div>
+  <h2 class="grad-purple">Knowledge Base &amp; Settings Tabs</h2>
+  <div class="divider div-purple"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Knowledge Base Tab</div>
+      <div class="card" style="border-color:rgba(63,185,80,.3)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:700;color:var(--green)">🗄️ Manage Knowledge Base</div>
+          <span class="badge badge-green">AVAILABLE</span>
+        </div>
+        <select class="mock-select" style="width:100%"><option>Topic A</option></select>
+        <div style="margin-top:8px;padding:8px;background:var(--surface2);border-radius:6px;font-size:11px;color:var(--muted);text-align:center;border:1px dashed var(--border)">
+          Drop PDF, DOCX, PPTX, XLSX, TXT, MD here or click to upload
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="mock-btn mock-btn-primary" style="flex:1">Index Topic</button>
+          <button class="mock-btn mock-btn-secondary">Index All</button>
+          <button class="mock-btn" style="background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)">Stop</button>
+        </div>
+        <div class="mock-progress-bar" style="margin-top:8px;height:8px;border-radius:4px"><div class="mock-progress-fill" style="width:60%;background:linear-gradient(90deg,var(--green),var(--accent))"></div></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">Indexing: training_guide.pdf (3 / 5 files)</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px">Settings Tab</div>
+      <div class="card" style="border-color:rgba(188,140,255,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:10px">⚙️ AI Provider Settings</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Active Provider</div>
+        <select class="mock-select" style="width:100%"><option>AWS Bedrock (default)</option></select>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:2px;margin-top:6px">Model ID</div>
+        <input class="mock-input" value="us.anthropic.claude-sonnet-4-20250514-v1:0" />
+        <div style="font-size:11px;color:var(--muted);margin-bottom:2px;margin-top:6px">Embedding Provider</div>
+        <select class="mock-select" style="width:100%"><option>Bedrock Titan (default)</option></select>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:2px;margin-top:6px">Max Tokens</div>
+        <input class="mock-input" value="32768" />
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="mock-btn mock-btn-primary" style="flex:1">Save Settings</button>
+          <button class="mock-btn mock-btn-secondary">Reset to Defaults</button>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">Settings saved to data/settings.json — secrets never written to disk.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 19 — SAFETY & SECURITY
+══════════════════════════════════════════════════════ -->
+<section class="slide left-align" id="s19">
+  <div class="slide-number">19 / 26</div>
+  <div class="tag tag-red">Safety &amp; Security</div>
+  <h2 class="grad-purple" style="text-align:left">Safety &amp; Security Controls</h2>
+  <div class="divider div-purple" style="margin-left:0"></div>
+  <div class="card-grid grid-2 mt-16 w-1000">
+    <div class="card" style="border-color:rgba(248,81,73,.3)">
+      <div style="font-size:22px;margin-bottom:8px">🛡️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:6px">Bedrock Guardrails (optional)</div>
+      <ul class="dot" style="font-size:13px">
+        <li>Content filtering — blocks toxicity, hate speech</li>
+        <li>Off-topic query blocking (education only)</li>
+        <li>PII detection logging (defense-in-depth)</li>
+        <li>Activated via BEDROCK_GUARDRAIL_ID in .env</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(210,153,34,.3)">
+      <div style="font-size:22px;margin-bottom:8px">⚙️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--orange);margin-bottom:6px">LoggingThrottleHook</div>
+      <ul class="dot" style="font-size:13px">
+        <li>Max 10 tool calls per turn (prevents runaway loops)</li>
+        <li>All tool calls logged with name, inputs, duration</li>
+        <li>Tool results logged on success/failure</li>
+        <li>BeforeToolCallEvent + AfterToolCallEvent hooks</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(88,166,255,.3)">
+      <div style="font-size:22px;margin-bottom:8px">⏱️</div>
+      <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:6px">Timeout Safety</div>
+      <ul class="dot" style="font-size:13px">
+        <li>All sub-agent calls wrapped in 60-second watchdog</li>
+        <li>Timeout triggers agent.cancel() cleanly</li>
+        <li>UI surfaces timeout error to user</li>
+        <li>ModelRetryStrategy — 3 retries on Bedrock throttle</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(63,185,80,.3)">
+      <div style="font-size:22px;margin-bottom:8px">📁</div>
+      <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:6px">File Write Sandbox</div>
+      <ul class="dot" style="font-size:13px">
+        <li>Content Author restricted to ./data/generated/</li>
+        <li>Path traversal attempts blocked in file_write tool</li>
+        <li>AWS credentials stored in .env — never committed</li>
+        <li>Secret keys never written to settings.json</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 20 — AGENTSKILLS + STRANDS FEATURES COVERAGE
+══════════════════════════════════════════════════════ -->
+<section class="slide left-align" id="s20">
+  <div class="slide-number">20 / 26</div>
+  <div class="tag tag-blue">Strands SDK</div>
+  <h2 class="grad-blue" style="text-align:left">Strands Features Coverage</h2>
+  <div class="divider div-blue" style="margin-left:0"></div>
+  <div class="card mt-12 w-1000" style="padding:0;overflow:hidden">
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;background:var(--surface2);border-bottom:1px solid var(--border);padding:8px 10px;font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--muted);text-transform:uppercase">
+      <div>Feature</div><div>Used In</div><div>Purpose</div>
+    </div>
+    <div class="matrix-row"><div class="matrix-feature">Agent</div><div class="matrix-used-in">All 7 agents</div><div class="matrix-purpose">Core agent loop</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">@tool decorator</div><div class="matrix-used-in">6 sub-agents + 4 custom tools</div><div class="matrix-purpose">Tool definition</div></div>
+    <div class="matrix-row"><div class="matrix-feature">BedrockModel</div><div class="matrix-used-in">All agents (Bedrock provider)</div><div class="matrix-purpose">LLM provider</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">LiteLLMModel</div><div class="matrix-used-in">All agents (non-Bedrock)</div><div class="matrix-purpose">Multi-provider LLM</div></div>
+    <div class="matrix-row"><div class="matrix-feature">AgentSkills plugin</div><div class="matrix-used-in">training_agent (any topic)</div><div class="matrix-purpose">Pluggable domain skill files per KB topic</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">SlidingWindowConvMgr</div><div class="matrix-used-in">Orchestrator, QA, ETL</div><div class="matrix-purpose">Context window management</div></div>
+    <div class="matrix-row"><div class="matrix-feature">SummarizingConvMgr</div><div class="matrix-used-in">Quiz, Content Author</div><div class="matrix-purpose">Long session compression</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">FileSessionManager</div><div class="matrix-used-in">Orchestrator</div><div class="matrix-purpose">Cross-request persistence</div></div>
+    <div class="matrix-row"><div class="matrix-feature">structured_output_model</div><div class="matrix-used-in">Quiz, LP, Content Author</div><div class="matrix-purpose">Pydantic-typed outputs</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">HookProvider</div><div class="matrix-used-in">Orchestrator</div><div class="matrix-purpose">Logging, throttling, safety</div></div>
+    <div class="matrix-row"><div class="matrix-feature">ModelRetryStrategy</div><div class="matrix-used-in">Orchestrator</div><div class="matrix-purpose">Bedrock throttle handling</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">stream_async()</div><div class="matrix-used-in">app.py → Orchestrator</div><div class="matrix-purpose">Streaming UI responses</div></div>
+    <div class="matrix-row"><div class="matrix-feature">agent.cancel()</div><div class="matrix-used-in">Sub-agent wrappers</div><div class="matrix-purpose">Timeout safety</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">trace_attributes</div><div class="matrix-used-in">All agents</div><div class="matrix-purpose">Observability tagging</div></div>
+    <div class="matrix-row"><div class="matrix-feature">invocation_state</div><div class="matrix-used-in">Orchestrator → all</div><div class="matrix-purpose">Session ID propagation</div></div>
+    <div class="matrix-row" style="background:rgba(255,255,255,.02)"><div class="matrix-feature">BeforeToolCallEvent</div><div class="matrix-used-in">LoggingThrottleHook</div><div class="matrix-purpose">Pre-call validation</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 21 — RETRIEVAL TOOLS
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s21">
+  <div class="slide-number">21 / 26</div>
+  <div class="tag tag-orange">Tools</div>
+  <h2 class="grad-orange">Retrieval &amp; Progress Tools</h2>
+  <div class="divider div-orange"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">Retrieval Tools</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">retrieve_qa</span>(
+    query: <span class="tok-fn">str</span>,
+    top_k: <span class="tok-fn">int</span> = <span class="tok-num">5</span>
+) -> <span class="tok-fn">str</span>:
+    <span class="tok-str">"""Retrieve QA training content.
+    Returns formatted content with citations."""</span>
+
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">retrieve_etl</span>(
+    query: <span class="tok-fn">str</span>,
+    top_k: <span class="tok-fn">int</span> = <span class="tok-num">5</span>
+) -> <span class="tok-fn">str</span>:
+    <span class="tok-str">"""Retrieve ETL training content.
+    Returns formatted content with citations."""</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">ChromaDB Collections</div>
+        <div style="font-size:12px;display:flex;flex-direction:column;gap:4px">
+          <div style="padding:6px 10px;background:rgba(88,166,255,.08);border-radius:6px;border:1px solid rgba(88,166,255,.2)">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent)">tech_&lt;topic_id&gt;</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">One collection per indexed KB topic — built-in or custom</div>
+          </div>
+          <div style="padding:6px 10px;background:var(--surface2);border-radius:6px;font-size:11px;color:var(--muted)">
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--text)">Built-in topics</span> — shipped with the app, ready to index
+          </div>
+          <div style="padding:6px 10px;background:var(--surface2);border-radius:6px;font-size:11px;color:var(--muted)">
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--purple)">N custom topics</span> added by users via the Knowledge Base UI
+          </div>
+          <div style="padding:6px 10px;background:var(--surface2);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--orange)">chat_history — last 50 Q&amp;A pairs (persistent)</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">Progress Tools</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">progress_reader</span>(
+    session_id: <span class="tok-fn">str</span>
+) -> <span class="tok-fn">str</span>:
+    <span class="tok-str">"""Read quiz history &amp; study topics.
+    Returns JSON with scores by technology."""</span>
+
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">progress_writer</span>(
+    session_id: <span class="tok-fn">str</span>,
+    technology: <span class="tok-fn">str</span>,
+    difficulty: <span class="tok-fn">str</span>,
+    score: <span class="tok-fn">int</span>,
+    total_questions: <span class="tok-fn">int</span>,
+    correct_answers: <span class="tok-fn">int</span>,
+) -> <span class="tok-fn">str</span>: ...
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px">File Write Tool</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-fn">@tool</span>
+<span class="tok-kw">def</span> <span class="tok-fn">file_write</span>(
+    filename: <span class="tok-fn">str</span>,
+    content:  <span class="tok-fn">str</span>,
+) -> <span class="tok-fn">str</span>:
+    <span class="tok-cmt"># path traversal protection</span>
+    <span class="tok-cmt"># sandbox: ./data/generated/ only</span>
+    ...
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 22 — CONFIGURATION REFERENCE
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s22">
+  <div class="slide-number">22 / 26</div>
+  <div class="tag tag-blue">Configuration</div>
+  <h2 class="grad-blue">Configuration Reference</h2>
+  <div class="divider div-blue"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">AWS Bedrock (.env)</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+ACTIVE_PROVIDER=bedrock
+AWS_ACCESS_KEY_ID=your_key
+AWS_SECRET_ACCESS_KEY=your_secret
+AWS_REGION=us-east-1
+BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-...
+BEDROCK_GUARDRAIL_ID=   <span class="tok-cmt"># leave empty</span>
+BEDROCK_GUARDRAIL_VERSION=1
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">Other Providers (.env)</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+ACTIVE_PROVIDER=ollama   <span class="tok-cmt"># or gemini/openai/...</span>
+LLM_API_KEY=
+LLM_BASE_URL=            <span class="tok-cmt"># for ollama/lmstudio</span>
+LLM_MODEL=               <span class="tok-cmt"># e.g. llama3.2</span>
+AGENT_TEMPERATURE=0.3
+AGENT_TOP_P=0.9
+AGENT_MAX_TOKENS=32768
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">Embedding (.env)</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+EMBEDDING_PROVIDER=bedrock   <span class="tok-cmt"># bedrock|ollama|openai|custom</span>
+EMBEDDING_MODEL=             <span class="tok-cmt"># leave empty = provider default</span>
+EMBEDDING_BASE_URL=          <span class="tok-cmt"># for ollama / custom</span>
+EMBEDDING_API_KEY=           <span class="tok-cmt"># for openai / custom</span>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px">Paths &amp; Logging (.env)</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+CHROMA_PERSIST_DIR=./data/chroma
+SESSIONS_DIR=./data/sessions
+GENERATED_DIR=./data/generated
+PROGRESS_DB=./data/progress.db
+LOG_LEVEL=INFO
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--muted)">Config priority: <strong style="color:var(--text)">.env</strong> &gt; <strong style="color:var(--text)">data/settings.json</strong> &gt; defaults. Secrets never written to settings.json.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 23 — TESTING
+══════════════════════════════════════════════════════ -->
+<section class="slide left-align" id="s23">
+  <div class="slide-number">23 / 26</div>
+  <div class="tag tag-green">Testing</div>
+  <h2 class="grad-green" style="text-align:left">Test Suite</h2>
+  <div class="divider div-green" style="margin-left:0"></div>
+  <div class="col2 mt-16 w-1000" style="align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">Test Coverage</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_ingestion.py</span><span style="font-size:12px;color:var(--muted)">parse + chunk + embed pipeline</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_retrieval.py</span><span style="font-size:12px;color:var(--muted)">ChromaDB search quality</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_progress_db.py</span><span style="font-size:12px;color:var(--muted)">SQLite read/write integrity</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_schemas.py</span><span style="font-size:12px;color:var(--muted)">Pydantic model validation</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_hooks.py</span><span style="font-size:12px;color:var(--muted)">throttle + logging hook logic</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_agents_integration.py</span><span style="font-size:12px;color:var(--muted)">agent routing + sub-agent calls</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_sessions.py</span><span style="font-size:12px;color:var(--muted)">FileSessionManager persistence</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span class="mono" style="font-size:11px">test_evals.py</span><span style="font-size:12px;color:var(--muted)">answer quality vs ground truth (live AI)</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0"><span class="mono" style="font-size:11px">test_e2e.py</span><span style="font-size:12px;color:var(--muted)">full flow: upload → index → chat → quiz</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">Running Tests</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-cmt"># Unit tests (no credentials needed)</span>
+uv run pytest tests/ -v \
+  --ignore=tests/test_evals.py \
+  --ignore=tests/test_e2e.py
+
+<span class="tok-cmt"># With coverage report</span>
+uv run pytest tests/ -v \
+  --cov=src --cov-report=html
+
+<span class="tok-cmt"># AI-powered evals (needs credentials)</span>
+uv run pytest tests/test_evals.py -v -s
+
+<span class="tok-cmt"># Full end-to-end (needs credentials + docs)</span>
+uv run pytest tests/test_e2e.py -v --slow
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">Test Infrastructure</div>
+        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px">
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Framework</span><span>pytest</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Mocking</span><span>pytest-mock</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border)"><span style="color:var(--muted)">Fixtures</span><span>tests/fixtures/</span></div>
+          <div style="display:flex;justify-content:space-between;padding:3px 0"><span style="color:var(--muted)">Coverage</span><span>pytest-cov → htmlcov/</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 24 — OBSERVABILITY
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s24">
+  <div class="slide-number">24 / 26</div>
+  <div class="tag tag-blue">Observability</div>
+  <h2 class="grad-blue">Logging &amp; Observability</h2>
+  <div class="divider div-blue"></div>
+  <div class="col2 mt-16" style="max-width:960px;align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px">trace_attributes</div>
+        <div class="code-block" style="font-size:11px;padding:10px">
+<span class="tok-cmt"># Set on every agent initialization</span>
+trace_attributes={
+    <span class="tok-str">"session.id"</span>:    session_id,
+    <span class="tok-str">"app.name"</span>:      <span class="tok-str">"techtrainer-ai"</span>,
+    <span class="tok-str">"app.version"</span>:   <span class="tok-str">"1.0.0"</span>,
+}
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">Python Logging (INFO level)</div>
+        <ul class="dot" style="font-size:12px">
+          <li>Document ingestion: files indexed, chunk counts</li>
+          <li>Agent invocations: which sub-agent, duration</li>
+          <li>Tool calls: name, sanitized inputs, duration</li>
+          <li>Errors and retries with full traceback</li>
+          <li>Session ID on every log line</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px">LoggingThrottleHook Events</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="padding:8px 12px;background:rgba(88,166,255,.08);border-radius:8px;border:1px solid rgba(88,166,255,.2)">
+            <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:3px">BeforeInvocationEvent</div>
+            <div style="font-size:11px;color:var(--muted)">Reset per-turn tool call counter</div>
+          </div>
+          <div style="padding:8px 12px;background:rgba(63,185,80,.08);border-radius:8px;border:1px solid rgba(63,185,80,.2)">
+            <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:3px">BeforeToolCallEvent</div>
+            <div style="font-size:11px;color:var(--muted)">Check throttle limit, log tool name + inputs, validate file paths</div>
+          </div>
+          <div style="padding:8px 12px;background:rgba(210,153,34,.08);border-radius:8px;border:1px solid rgba(210,153,34,.2)">
+            <div style="font-size:12px;font-weight:700;color:var(--orange);margin-bottom:3px">AfterToolCallEvent</div>
+            <div style="font-size:11px;color:var(--muted)">Log tool name, success/failure, response size, duration</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px">OpenTelemetry</div>
+        <p style="font-size:12px">Strands emits OTEL spans per agent invocation and tool call. Compatible with any OTLP-compatible backend (AWS X-Ray, Jaeger, Datadog).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 25 — DEMO FLOW
+══════════════════════════════════════════════════════ -->
+<section class="slide left-align" id="s25">
+  <div class="slide-number">25 / 26</div>
+  <div class="tag tag-green">Demo</div>
+  <h2 class="grad-green" style="text-align:left">Typical User Journey</h2>
+  <div class="divider div-green" style="margin-left:0"></div>
+  <div class="col2 mt-12 w-1000" style="align-items:flex-start">
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(63,185,80,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px">New Employee Onboarding</div>
+        <div class="seq-step"><div class="seq-num">1</div><div class="seq-text"><strong>Open Knowledge Base tab</strong> → upload training documents for any topic</div></div>
+        <div class="seq-step"><div class="seq-num">2</div><div class="seq-text"><strong>Click Index</strong> → watch per-file progress bar complete</div></div>
+        <div class="seq-step"><div class="seq-num">3</div><div class="seq-text"><strong>Switch to Chat tab</strong> → ask any question about the indexed topic</div></div>
+        <div class="seq-step"><div class="seq-num">4</div><div class="seq-text"><strong>Response streams</strong> with citations from your uploaded documents</div></div>
+        <div class="seq-step"><div class="seq-num">5</div><div class="seq-text"><strong>Switch to Quiz tab</strong> → select topic / difficulty / question count</div></div>
+        <div class="seq-step"><div class="seq-num">6</div><div class="seq-text"><strong>Submit quiz</strong> → score saved to SQLite progress database</div></div>
+        <div class="seq-step"><div class="seq-num">7</div><div class="seq-text"><strong>Switch to Learning Path</strong> → see recommended topics and weak areas</div></div>
+        <div class="seq-step"><div class="seq-num">8</div><div class="seq-text"><strong>Refresh browser</strong> → chat history reloads from ChromaDB</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;border-color:rgba(210,153,34,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--orange);margin-bottom:10px">Content Author Flow</div>
+        <div class="seq-step"><div class="seq-num">1</div><div class="seq-text"><strong>Switch to Content Author tab</strong> → enter title, technology, difficulty</div></div>
+        <div class="seq-step"><div class="seq-num">2</div><div class="seq-text"><strong>Add learning objectives</strong> in text area</div></div>
+        <div class="seq-step"><div class="seq-num">3</div><div class="seq-text"><strong>Click Generate Module</strong> → content_author_agent runs</div></div>
+        <div class="seq-step"><div class="seq-num">4</div><div class="seq-text"><strong>Live Markdown preview</strong> renders as content streams</div></div>
+        <div class="seq-step"><div class="seq-num">5</div><div class="seq-text"><strong>Save to Library</strong> → file_write to ./data/generated/</div></div>
+      </div>
+      <div class="card" style="border-color:rgba(188,140,255,.3)">
+        <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:6px">Quick Start</div>
+        <div class="code-block" style="font-size:11px;padding:8px">
+cd 887 &amp;&amp; uv sync
+cp .env.example .env
+<span class="tok-cmt"># edit .env with your credentials</span>
+uv run streamlit run app.py
+<span class="tok-cmt"># open http://localhost:8501</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLIDE 26 — SUMMARY
+══════════════════════════════════════════════════════ -->
+<section class="slide center" id="s26">
+  <div class="title-bg"></div>
+  <div class="slide-number">26 / 26</div>
+  <div class="tag tag-blue">Summary</div>
+  <h2 class="grad-blue" style="font-size:44px">TechTrainer AI</h2>
+  <div class="divider div-blue"></div>
+  <div class="card-grid grid-4 mt-20" style="max-width:900px">
+    <div class="big-stat"><div class="big-stat-num grad-blue">7</div><div class="big-stat-lbl">Specialized<br>AI Agents</div></div>
+    <div class="big-stat"><div class="big-stat-num grad-green">10</div><div class="big-stat-lbl">Skill Domains<br>+ Custom Topics</div></div>
+    <div class="big-stat"><div class="big-stat-num grad-purple">16</div><div class="big-stat-lbl">Strands SDK<br>Features Used</div></div>
+    <div class="big-stat"><div class="big-stat-num grad-orange">7</div><div class="big-stat-lbl">LLM<br>Providers</div></div>
+  </div>
+  <div class="card-grid grid-3 mt-20" style="max-width:900px">
+    <div class="card center" style="border-color:rgba(88,166,255,.3)">
+      <div style="font-size:22px;margin-bottom:8px">🧠</div>
+      <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:5px">RAG-Grounded Answers</div>
+      <p style="font-size:12px">Every response cited from your uploaded training documents. Zero hallucination policy enforced by system prompt + optional Guardrails.</p>
+    </div>
+    <div class="card center" style="border-color:rgba(63,185,80,.3)">
+      <div style="font-size:22px;margin-bottom:8px">🔌</div>
+      <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:5px">Provider-Agnostic</div>
+      <p style="font-size:12px">Swap LLM and embedding providers in the Settings tab without touching code. Works fully offline with Ollama and LM Studio.</p>
+    </div>
+    <div class="card center" style="border-color:rgba(188,140,255,.3)">
+      <div style="font-size:22px;margin-bottom:8px">📦</div>
+      <div style="font-size:14px;font-weight:700;color:var(--purple);margin-bottom:5px">Self-Contained</div>
+      <p style="font-size:12px">One uv project, local ChromaDB + SQLite, no external servers. Run anywhere with uv run streamlit run app.py.</p>
+    </div>
+  </div>
+  <p class="lead mt-20" style="font-size:14px;color:var(--muted)">
+    AG-UC-0887 &nbsp;·&nbsp; Madurai · Applied AI &nbsp;·&nbsp; Strands Agents SDK · AWS Bedrock · Streamlit &nbsp;·&nbsp; Python 3.10+
+  </p>
+  <p style="font-size:13px;color:var(--muted);margin-top:8px">Developed by B.Vignesh Kumar — ic19939@gmail.com</p>
+</section>
+
+</div><!-- #deck -->
+
+<!-- Navigation -->
+<div id="nav">
+  <button id="btn-prev" onclick="go(-1)" disabled>‹</button>
+  <span id="slide-indicator">1 / 26</span>
+  <button id="btn-next" onclick="go(1)">›</button>
+</div>
+
+<script>
+  const TOTAL = 26;
+  let cur = 1;
+
+  function go(dir) {
+    const next = cur + dir;
+    if (next < 1 || next > TOTAL) return;
+    for (let i = 1; i <= TOTAL; i++) {
+      document.getElementById('s' + i).classList.remove('active', 'prev');
+    }
+    cur = next;
+    document.getElementById('s' + cur).classList.add('active');
+    document.getElementById('slide-indicator').textContent = cur + ' / ' + TOTAL;
+    document.getElementById('btn-prev').disabled = (cur === 1);
+    document.getElementById('btn-next').disabled = (cur === TOTAL);
+    document.getElementById('progress').style.width = ((cur / TOTAL) * 100) + '%';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') go(-1);
+  });
+
+  // Init progress
+  document.getElementById('progress').style.width = ((1 / TOTAL) * 100) + '%';
+</script>
+</body>
+</html>
