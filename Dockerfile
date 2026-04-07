@@ -70,7 +70,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
 # --server.port 8501         explicit port
 # --server.headless true     suppress browser-open prompt (no browser in container)
 # --server.fileWatcherType none  disable inotify file watching (not needed in production)
-ENTRYPOINT ["uv", "run", "streamlit", "run", "app.py", \
+ENTRYPOINT ["/app/.venv/bin/streamlit", "run", "app.py", \
             "--server.address", "0.0.0.0", \
             "--server.port", "8501", \
             "--server.headless", "true", \
