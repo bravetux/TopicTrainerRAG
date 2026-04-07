@@ -4,7 +4,7 @@
 # =============================================================================
 
 # ── Stage: pull uv binary ─────────────────────────────────────────────────────
-FROM ghcr.io/astral-sh/uv:latest AS uv
+FROM ghcr.io/astral-sh/uv:0.6.14 AS uv
 
 # ── Base image ────────────────────────────────────────────────────────────────
 FROM python:3.11-slim
@@ -18,6 +18,12 @@ RUN groupadd --gid 1000 appuser && \
 
 # ── Working directory ─────────────────────────────────────────────────────────
 WORKDIR /app
+
+# ── Environment ───────────────────────────────────────────────────────────────
+# PYTHONUNBUFFERED: flush stdout/stderr immediately to CloudWatch Logs
+# UV_COMPILE_BYTECODE: pre-compile .pyc files at build time to reduce startup latency
+ENV PYTHONUNBUFFERED=1 \
+    UV_COMPILE_BYTECODE=1
 
 # ── Install dependencies ──────────────────────────────────────────────────────
 # Copy lockfile and project metadata first to leverage Docker layer caching.
