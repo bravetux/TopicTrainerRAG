@@ -1,0 +1,32 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Runtime data — provided by EFS at runtime, must not be baked into image
+data/
+
+# Local credentials — must never enter the image
+.env
+
+# Test and dev artifacts
+tests/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Version control and tooling
+.git/
+.gitignore
+.claude/
+.superpowers/
+
+# Docs and scripts — not needed at runtime
+docs/
+scripts/
+README.md
+"use case.txt"
