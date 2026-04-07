@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """QA training agent — expert on Selenium, Tosca, Playwright."""
 import logging
 from pathlib import Path

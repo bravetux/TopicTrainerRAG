@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Content author agent — generates Markdown training modules."""
 import json
 import logging

@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 # Settings Tab & Multi-Provider AI Design
 
 **Last updated:** 2026-03-30 — Added embedding provider section, test connection restriction, developer credit.

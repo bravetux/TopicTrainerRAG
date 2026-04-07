@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """ETL training agent — expert on Glue, Spark, dbt, Informatica, Talend, SSIS, ADF."""
 import logging
 from pathlib import Path

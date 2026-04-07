@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 ---
 name: adf-expert
 description: Answer questions about Azure Data Factory including pipelines, activities, datasets, linked services, triggers, and monitoring

@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 # TechTrainer AI
 
 An intelligent employee training chatbot built on the **Strands Agents SDK**. Helps employees access and navigate training materials across QA testing tools and data engineering technologies, with support for multiple AI providers.

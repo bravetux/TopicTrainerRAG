@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Persistent chat history backed by ChromaDB.
 
 Stores Q&A pairs in a dedicated 'chat_history' collection.

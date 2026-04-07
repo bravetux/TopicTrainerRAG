@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Document ingestion pipeline: parse, chunk, embed, and index into ChromaDB."""
 import os
 import logging

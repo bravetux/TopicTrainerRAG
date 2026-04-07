@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Orchestrator agent — single entry point routing to specialist sub-agents."""
 import logging
 from strands import Agent

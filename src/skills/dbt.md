@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 ---
 name: dbt-expert
 description: Answer questions about dbt (data build tool) including models, tests, seeds, macros, sources, and lineage

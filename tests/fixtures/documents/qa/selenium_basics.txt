@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 Selenium WebDriver Guide
 
 Selenium WebDriver is a tool for automating web browsers. It provides a programming interface to create and execute test scripts.

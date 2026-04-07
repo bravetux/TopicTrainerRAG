@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 ---
 name: playwright-expert
 description: Answer questions about Playwright test automation including Python/TypeScript APIs, fixtures, tracing, and CI integration

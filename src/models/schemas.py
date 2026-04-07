@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Pydantic models for structured agent outputs."""
 from typing import Literal
 from pydantic import BaseModel, Field

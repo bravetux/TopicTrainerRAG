@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Provider configuration and model factory for TechTrainer AI.
 
 Supports: AWS Bedrock, Local Ollama, LM Studio, OpenRouter,

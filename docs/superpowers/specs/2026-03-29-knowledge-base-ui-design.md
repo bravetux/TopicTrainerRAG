@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 # Knowledge Base UI & Per-Technology RAG Design
 
 > **For agentic workers:** This spec is ready for implementation. Use superpowers:writing-plans to produce the implementation plan.

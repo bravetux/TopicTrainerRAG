@@ -1,3 +1,7 @@
+# =============================================================================
+# Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+# Date   : 26 March 2026
+# =============================================================================
 """Progress agent — reads and writes quiz progress via SQLite."""
 import logging
 from strands import Agent, tool

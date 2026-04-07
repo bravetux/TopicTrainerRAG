@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 ---
 name: aws-glue-expert
 description: Answer questions about AWS Glue ETL jobs, crawlers, DynamicFrames, Data Catalog, and Glue Studio

@@ -1,3 +1,7 @@
+<!--
+  Author : B.Vignesh Kumar aka Bravetux <ic19939@gmail.com>
+  Date   : 26 March 2026
+-->
 # TechTrainer AI — Design Specification
 **Date:** 2026-03-28
 **Project:** AG-UC-0887 | Madurai | Applied AI
