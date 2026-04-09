@@ -777,6 +777,69 @@ with tab_kb:
 
     st.divider()
 
+    # ── Wikipedia ZIM Files ─────────────────────────────────────────────────
+    with st.expander("📖 Wikipedia ZIM Files"):
+        st.caption(
+            "Point to Wikipedia ZIM files for offline reference. "
+            "Download topic-specific ZIM dumps from download.kiwix.org."
+        )
+
+        from src.tools.provider_manager import load_settings, save_settings
+
+        current_settings = load_settings()
+        wiki_enabled = current_settings.get("wikipedia_enabled", False)
+        wiki_paths = current_settings.get("wikipedia_zim_paths", [])
+
+        new_enabled = st.toggle("Enable Wikipedia search", value=wiki_enabled, key="wiki_enabled")
+
+        # Display current ZIM paths
+        if wiki_paths:
+            st.markdown("**Configured ZIM files:**")
+            paths_to_remove = []
+            for i, p in enumerate(wiki_paths):
+                col_path, col_del = st.columns([4, 1])
+                with col_path:
+                    st.text(p)
+                with col_del:
+                    if st.button("✕", key=f"wiki_del_{i}"):
+                        paths_to_remove.append(i)
+            if paths_to_remove:
+                wiki_paths = [p for i, p in enumerate(wiki_paths) if i not in paths_to_remove]
+                current_settings["wikipedia_zim_paths"] = wiki_paths
+                save_settings(current_settings)
+                st.rerun()
+        else:
+            st.info("No ZIM files configured yet.")
+
+        # Add new ZIM path
+        new_path = st.text_input(
+            "ZIM file path",
+            placeholder="e.g. D:/data/wikipedia_en_computer.zim",
+            key="wiki_new_path",
+        )
+        if st.button("Add ZIM File", key="wiki_add"):
+            if new_path.strip():
+                from pathlib import Path as P
+                if P(new_path.strip()).exists():
+                    wiki_paths.append(new_path.strip())
+                    current_settings["wikipedia_zim_paths"] = wiki_paths
+                    current_settings["wikipedia_enabled"] = new_enabled
+                    save_settings(current_settings)
+                    st.success(f"Added: {new_path.strip()}")
+                    st.rerun()
+                else:
+                    st.error(f"File not found: {new_path.strip()}")
+            else:
+                st.error("Please enter a file path.")
+
+        # Save enable/disable toggle
+        if new_enabled != wiki_enabled:
+            current_settings["wikipedia_enabled"] = new_enabled
+            save_settings(current_settings)
+            st.rerun()
+
+    st.divider()
+
     # ── Built-in Technologies ────────────────────────────────────────────────
     builtin = [t for t in all_topics if t.get("is_builtin", True)]
     custom = [t for t in all_topics if not t.get("is_builtin", True)]
