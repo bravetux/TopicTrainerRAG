@@ -79,3 +79,27 @@ class TestSearchAndRankZim:
         assert len(results) >= 1
         # Article A should rank first (closer embedding)
         assert results[0]["title"] == "Article A"
+
+
+class TestWikipediaConfigPersistence:
+    @patch("src.tools.provider_manager.load_settings")
+    def test_config_reads_from_settings_json(self, mock_load):
+        mock_load.return_value = {
+            "wikipedia_enabled": True,
+            "wikipedia_zim_paths": ["/data/wiki.zim"],
+            "wikipedia_results": 10,
+        }
+        from src.tools.retrieval import _get_wikipedia_config
+        config = _get_wikipedia_config()
+        assert config["enabled"] is True
+        assert config["zim_paths"] == ["/data/wiki.zim"]
+        assert config["top_k"] == 10
+
+    @patch("src.tools.provider_manager.load_settings")
+    def test_config_falls_back_to_env_defaults(self, mock_load):
+        mock_load.return_value = {}
+        from src.tools.retrieval import _get_wikipedia_config
+        config = _get_wikipedia_config()
+        assert config["enabled"] is False
+        assert config["zim_paths"] == []
+        assert config["top_k"] == 5
