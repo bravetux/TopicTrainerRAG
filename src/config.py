@@ -30,6 +30,13 @@ GENERATED_DIR: str = os.getenv("GENERATED_DIR", "./data/generated")
 PROGRESS_DB: str = os.getenv("PROGRESS_DB", "./data/progress.db")
 TOPICS_REGISTRY_PATH: str = os.getenv("TOPICS_REGISTRY_PATH", "./data/topics_registry.json")
 
+# ── Wikipedia ZIM ─────────────────────────────────────────────────────────────
+WIKIPEDIA_ENABLED: bool = os.getenv("WIKIPEDIA_ENABLED", "false").lower() == "true"
+WIKIPEDIA_ZIM_PATHS: list[str] = [
+    p.strip() for p in os.getenv("WIKIPEDIA_ZIM_PATHS", "").split(",") if p.strip()
+]
+WIKIPEDIA_RESULTS: int = int(os.getenv("WIKIPEDIA_RESULTS", "5"))
+
 # ── Built-in Topics ────────────────────────────────────────────────────────────
 BUILTIN_TOPICS: list[dict] = [
     {"id": "selenium",    "display_name": "Selenium",           "collection": "tech_selenium",    "doc_dir": "./data/documents/selenium"},
