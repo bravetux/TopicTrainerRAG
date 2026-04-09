@@ -13,7 +13,7 @@ class TestRetrieveWikipedia:
             "top_k": 5,
         }
         mock_search.return_value = [
-            {"title": "Python (language)", "content": "Python is a language.", "source": "wikipedia.zim"},
+            {"title": "Python (language)", "content": "Python is a language.", "source": "Wikipedia (wiki)"},
         ]
 
         from src.tools.retrieval import retrieve_wikipedia
@@ -22,8 +22,9 @@ class TestRetrieveWikipedia:
             query="what is python",
             top_k=3,
         )
-        assert "Python" in result
-        assert "Source:" in result
+        assert "[1] Source: Wikipedia (wiki)" in result
+        assert "Python (language)" in result
+        assert "Python is a language." in result
 
     @patch("src.tools.retrieval._get_wikipedia_config")
     def test_returns_message_when_disabled(self, mock_config):
