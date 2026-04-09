@@ -4,6 +4,8 @@
 # =============================================================================
 """ChromaDB retrieval tools — per-technology and multi-collection queries."""
 import logging
+import math
+from pathlib import Path
 from typing import Callable, Optional
 
 import chromadb
@@ -13,6 +15,7 @@ from strands import tool
 from src.config import (
     CHROMA_PERSIST_DIR, RETRIEVAL_TOP_K,
     QA_TOPIC_IDS, ETL_TOPIC_IDS, BUILTIN_TOPICS,
+    WIKIPEDIA_ENABLED, WIKIPEDIA_ZIM_PATHS, WIKIPEDIA_RESULTS,
 )
 from src.tools.embedding_manager import embed_texts as _embed_texts
 
@@ -192,3 +195,121 @@ def retrieve_topic(query: str, topic_id: str, top_k: int = 5) -> str:
             f"Please go to the \U0001f4da Knowledge Base tab and upload documents for this topic."
         )
     return query_collection(query, topic["collection"], top_k)
+
+
+def _get_wikipedia_config() -> dict:
+    """Load Wikipedia settings, merging settings.json with env/config defaults."""
+    try:
+        from src.tools.provider_manager import load_settings
+        settings = load_settings()
+    except Exception:
+        settings = {}
+
+    enabled = settings.get("wikipedia_enabled", WIKIPEDIA_ENABLED)
+    zim_paths = settings.get("wikipedia_zim_paths", WIKIPEDIA_ZIM_PATHS)
+    top_k = settings.get("wikipedia_results", WIKIPEDIA_RESULTS)
+
+    return {"enabled": enabled, "zim_paths": zim_paths, "top_k": top_k}
+
+
+def _cosine_similarity(a: list[float], b: list[float]) -> float:
+    """Compute cosine similarity between two vectors."""
+    dot = sum(x * y for x, y in zip(a, b))
+    norm_a = math.sqrt(sum(x * x for x in a))
+    norm_b = math.sqrt(sum(x * x for x in b))
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    return dot / (norm_a * norm_b)
+
+
+def _search_and_rank_zim(
+    query: str,
+    zim_paths: list[str],
+    top_k: int = 5,
+) -> list[dict]:
+    """Hybrid search: Xapian keyword search → chunk → embed → rank by cosine similarity.
+
+    Returns list of dicts with keys: title, content, source, similarity.
+    """
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    from src.config import CHUNK_SIZE, CHUNK_OVERLAP
+    from src.tools.zim_reader import search_multiple_zim
+
+    # Step 1: Xapian search to find candidate articles (fetch more than top_k for re-ranking)
+    candidates = search_multiple_zim(query, zim_paths, top_k=top_k * 2)
+    if not candidates:
+        return []
+
+    # Step 2: Chunk candidate articles
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP, length_function=len,
+    )
+    chunks = []  # list of (chunk_text, title, zim_file)
+    for article in candidates:
+        article_chunks = splitter.split_text(article["content"])
+        for chunk in article_chunks:
+            chunks.append((chunk, article["title"], article["zim_file"]))
+
+    if not chunks:
+        return []
+
+    # Step 3: Embed query and all chunks
+    query_embedding = _embed([query])[0]
+    chunk_texts = [c[0] for c in chunks]
+    chunk_embeddings = _embed(chunk_texts)
+
+    # Step 4: Rank chunks by cosine similarity
+    scored = []
+    for i, (text, title, zim_file) in enumerate(chunks):
+        sim = _cosine_similarity(query_embedding, chunk_embeddings[i])
+        scored.append({
+            "title": title,
+            "content": text,
+            "source": f"Wikipedia ({Path(zim_file).stem})",
+            "similarity": sim,
+        })
+
+    scored.sort(key=lambda x: x["similarity"], reverse=True)
+
+    # Deduplicate by title — keep best chunk per article
+    seen_titles = set()
+    deduped = []
+    for item in scored:
+        if item["title"] not in seen_titles:
+            seen_titles.add(item["title"])
+            deduped.append(item)
+        if len(deduped) >= top_k:
+            break
+
+    return deduped
+
+
+@tool
+def retrieve_wikipedia(query: str, top_k: int = 5) -> str:
+    """Search Wikipedia ZIM knowledge base for general reference content.
+
+    Args:
+        query: Search query for Wikipedia articles.
+        top_k: Number of most relevant article chunks to return. Default is 5.
+
+    Returns:
+        Formatted string of relevant Wikipedia content with source citations.
+    """
+    logger.debug("retrieve_wikipedia query=%r top_k=%d", query, top_k)
+    config = _get_wikipedia_config()
+
+    if not config["enabled"]:
+        return "Wikipedia search is not enabled. Configure a ZIM file in the Knowledge Base tab."
+
+    if not config["zim_paths"]:
+        return "No ZIM files configured. Add a Wikipedia ZIM file path in the Knowledge Base tab."
+
+    results = _search_and_rank_zim(query, config["zim_paths"], top_k=top_k)
+    if not results:
+        return "No relevant Wikipedia articles found for your query."
+
+    parts = []
+    for i, r in enumerate(results, 1):
+        parts.append(f"[{i}] Source: {r['source']} — {r['title']}\n{r['content']}")
+
+    return "\n\n---\n\n".join(parts)
