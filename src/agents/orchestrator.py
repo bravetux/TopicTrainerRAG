@@ -18,6 +18,7 @@ from src.agents.learning_path_agent import learning_path_agent
 from src.agents.content_author_agent import content_author_agent
 from src.agents.progress_agent import progress_agent
 from src.tools.retrieval import retrieve_topic
+from src.tools.retrieval import retrieve_wikipedia
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ Route every request to the appropriate specialist tool:
 | Learning path ("what should I study", "recommend topics") | learning_path_agent |
 | Content creation ("create a module", "write training material") | content_author_agent |
 | Progress queries ("my scores", "how am I doing") | progress_agent |
+| General knowledge questions (when Wikipedia is enabled) | retrieve_wikipedia |
 
 ## Response Style
 - Always cite source documents when the specialist provides them
@@ -84,6 +86,15 @@ def _build_system_prompt() -> str:
             unavail_section = ""
 
         available_section = avail_lines + unavail_section
+
+        # Wikipedia ZIM status
+        try:
+            from src.tools.retrieval import _get_wikipedia_config
+            wiki_cfg = _get_wikipedia_config()
+            if wiki_cfg["enabled"] and wiki_cfg["zim_paths"]:
+                available_section += "\n- Wikipedia (via ZIM files) — use retrieve_wikipedia for general reference"
+        except Exception:
+            pass
     except Exception as exc:
         logger.warning("Could not load topic status for system prompt: %s", exc)
         available_section = "- Topic status unavailable. Route normally."
@@ -99,6 +110,7 @@ _ALL_TOOLS = [
     content_author_agent,
     progress_agent,
     retrieve_topic,
+    retrieve_wikipedia,
 ]
 
 
