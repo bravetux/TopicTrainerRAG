@@ -48,7 +48,7 @@ def test_defaults_contain_topic_classifications(self, tmp_path, monkeypatch):
 - [ ] **Step 2: Run test to confirm it fails**
 
 ```bash
-cd D:/Downloads/Projects/ai_arena/887
+cd D:/Downloads/Projects/ai_arena/techtrainer-ai
 uv run pytest tests/test_provider_manager.py::TestLoadSettings::test_defaults_contain_topic_classifications -v
 ```
 

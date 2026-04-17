@@ -52,7 +52,7 @@ uv --version
 Navigate to the project directory and install all dependencies:
 
 ```bash
-cd D:/Downloads/Projects/ai_arena/887
+cd D:/Downloads/Projects/ai_arena/techtrainer-ai
 
 # Install all dependencies from pyproject.toml
 uv sync

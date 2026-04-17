@@ -4,7 +4,7 @@
 -->
 # TechTrainer AI — Test Plan
 **Date:** 2026-03-28
-**Project:** AG-UC-0887 | Madurai | Applied AI
+**Project:** TechTrainer AI | Madurai | Applied AI
 **Version:** 1.0
 
 ---

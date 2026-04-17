@@ -55,7 +55,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ### 2. Clone and set up the project
 ```bash
-cd 887
+cd techtrainer-ai
 uv sync
 ```
 
@@ -86,7 +86,7 @@ uv run python -m src.tools.document_ingestion --reindex
 ## Project Structure
 
 ```
-887/
+techtrainer-ai/
 ├── .env                          # Credentials and config (not committed)
 ├── .env.example                  # Template for .env
 ├── pyproject.toml                # uv project config and dependencies
@@ -143,13 +143,43 @@ uv run python -m src.tools.document_ingestion --reindex
 │   ├── test_evals.py
 │   └── test_e2e.py
 └── docs/
-    ├── TESTPLAN.md
     ├── SETUP.md
-    └── superpowers/specs/
-        ├── 2026-03-28-techtrainer-ai-design.md
-        ├── 2026-03-29-knowledge-base-ui-design.md
-        └── 2026-03-29-settings-provider-design.md
+    ├── TESTPLAN.md
+    ├── presentation.html
+    └── superpowers/
+        ├── specs/
+        │   ├── 2026-03-28-techtrainer-ai-design.md
+        │   ├── 2026-03-29-knowledge-base-ui-design.md
+        │   ├── 2026-03-29-settings-provider-design.md
+        │   ├── 2026-04-07-topic-classification-design.md
+        │   └── 2026-04-07-ecs-dockerfile-design.md
+        └── plans/
+            ├── 2026-03-28-techtrainer-ai.md
+            ├── 2026-03-29-knowledge-base-ui.md
+            ├── 2026-03-29-settings-provider.md
+            ├── 2026-04-07-topic-classification.md
+            ├── 2026-04-07-ecs-dockerfile.md
+            └── 2026-04-09-wikipedia-zim-integration.md
 ```
+
+### Documentation index
+
+| File | Purpose |
+|---|---|
+| [`docs/SETUP.md`](docs/SETUP.md) | Full environment setup and provider configuration guide |
+| [`docs/TESTPLAN.md`](docs/TESTPLAN.md) | Test strategy, coverage matrix, and evaluation scenarios |
+| [`docs/presentation.html`](docs/presentation.html) | Slide deck overview of the system |
+| [`docs/superpowers/specs/2026-03-28-techtrainer-ai-design.md`](docs/superpowers/specs/2026-03-28-techtrainer-ai-design.md) | Core agent architecture and routing design |
+| [`docs/superpowers/specs/2026-03-29-knowledge-base-ui-design.md`](docs/superpowers/specs/2026-03-29-knowledge-base-ui-design.md) | Knowledge Base tab UX and ingestion pipeline |
+| [`docs/superpowers/specs/2026-03-29-settings-provider-design.md`](docs/superpowers/specs/2026-03-29-settings-provider-design.md) | Multi-provider LLM/embedding settings design |
+| [`docs/superpowers/specs/2026-04-07-topic-classification-design.md`](docs/superpowers/specs/2026-04-07-topic-classification-design.md) | Automatic topic classification design |
+| [`docs/superpowers/specs/2026-04-07-ecs-dockerfile-design.md`](docs/superpowers/specs/2026-04-07-ecs-dockerfile-design.md) | AWS ECS / Dockerfile deployment design |
+| [`docs/superpowers/plans/2026-03-28-techtrainer-ai.md`](docs/superpowers/plans/2026-03-28-techtrainer-ai.md) | Initial build-out implementation plan |
+| [`docs/superpowers/plans/2026-03-29-knowledge-base-ui.md`](docs/superpowers/plans/2026-03-29-knowledge-base-ui.md) | Knowledge Base UI implementation plan |
+| [`docs/superpowers/plans/2026-03-29-settings-provider.md`](docs/superpowers/plans/2026-03-29-settings-provider.md) | Settings & provider switch implementation plan |
+| [`docs/superpowers/plans/2026-04-07-topic-classification.md`](docs/superpowers/plans/2026-04-07-topic-classification.md) | Topic classification implementation plan |
+| [`docs/superpowers/plans/2026-04-07-ecs-dockerfile.md`](docs/superpowers/plans/2026-04-07-ecs-dockerfile.md) | ECS / Dockerfile implementation plan |
+| [`docs/superpowers/plans/2026-04-09-wikipedia-zim-integration.md`](docs/superpowers/plans/2026-04-09-wikipedia-zim-integration.md) | Wikipedia ZIM integration implementation plan |
 
 ---
 
@@ -247,14 +277,130 @@ uv run pytest tests/test_e2e.py -v --slow
 
 ## Architecture Overview
 
-TechTrainer AI uses the **Orchestrator + Sub-Agents as Tools** pattern from Strands:
+TechTrainer AI uses the **Orchestrator + Sub-Agents as Tools** pattern from Strands. The orchestrator is the only entry point; each specialist sub-agent has its own system prompt, skills, and tools and is exposed to the orchestrator as a callable tool.
 
-```
-User → Orchestrator → QA Agent / ETL Agent / Quiz Agent / LP Agent / Content Agent
-                    ↘ Progress Agent
+### System Architecture
+
+```mermaid
+flowchart TB
+    User([User])
+
+    subgraph UI["Streamlit UI (app.py)"]
+        Chat[Chat Tab]
+        Quiz[Quiz Tab]
+        LP[Learning Path Tab]
+        Author[Content Author Tab]
+        KB[Knowledge Base Tab]
+        Settings[Settings Tab]
+        Dashboard[Progress Dashboard]
+    end
+
+    subgraph Agents["Strands Agents"]
+        Orch[Orchestrator]
+        QA[QA Agent<br/>Selenium / Tosca / Playwright]
+        ETL[ETL Agent<br/>Glue / Spark / dbt / ...]
+        QuizA[Quiz Agent]
+        LPA[Learning Path Agent]
+        CA[Content Author Agent]
+        PA[Progress Agent]
+    end
+
+    subgraph Tools["Tools &amp; Managers"]
+        Retrieval[retrieval.py<br/>retrieve_topic / retrieve_wikipedia]
+        Ingest[document_ingestion.py]
+        KBMgr[kb_manager.py]
+        History[chat_history.py]
+        ProgDB[progress_db.py]
+        ProvMgr[provider_manager.py]
+        EmbMgr[embedding_manager.py]
+    end
+
+    subgraph Storage["Persistent Storage"]
+        Chroma[(ChromaDB<br/>vectors + chat history)]
+        SQLite[(SQLite<br/>progress.db)]
+        FS[(Filesystem<br/>sessions / generated / documents)]
+        ZIM[(Wikipedia<br/>ZIM files)]
+    end
+
+    subgraph Providers["External Providers"]
+        LLM[LLM Provider<br/>Bedrock / Ollama / LM Studio /<br/>OpenRouter / Gemini / OpenAI]
+        Emb[Embedding Provider<br/>Bedrock / Ollama / OpenAI]
+    end
+
+    User --> UI
+    Chat --> Orch
+    Quiz --> Orch
+    LP --> Orch
+    Author --> Orch
+    KB --> Ingest
+    KB --> KBMgr
+    Settings --> ProvMgr
+    Dashboard --> ProgDB
+
+    Orch -->|as tool| QA
+    Orch -->|as tool| ETL
+    Orch -->|as tool| QuizA
+    Orch -->|as tool| LPA
+    Orch -->|as tool| CA
+    Orch -->|as tool| PA
+    Orch -->|as tool| Retrieval
+
+    QA --> Retrieval
+    ETL --> Retrieval
+    QuizA --> Retrieval
+    LPA --> ProgDB
+    CA --> FS
+    PA --> ProgDB
+
+    Orch --> History
+    Retrieval --> Chroma
+    Retrieval --> ZIM
+    Ingest --> Chroma
+    Ingest --> EmbMgr
+    History --> Chroma
+    ProgDB --> SQLite
+    Orch --> FS
+
+    Agents --> ProvMgr
+    ProvMgr --> LLM
+    EmbMgr --> Emb
 ```
 
-Each specialist sub-agent has its own system prompt, skills, and tools. The orchestrator routes every request to the right expert and streams the response back to the UI.
+### Request Sequence (Chat Q&A)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as User
+    participant UI as Streamlit UI
+    participant O as Orchestrator
+    participant S as Specialist Agent<br/>(QA / ETL / ...)
+    participant R as retrieval.py
+    participant C as ChromaDB
+    participant H as chat_history.py
+    participant L as LLM Provider
+
+    U->>UI: Ask question
+    UI->>H: Load recent history
+    H->>C: Query chat_history collection
+    C-->>H: Last N Q&A pairs
+    H-->>UI: History context
+    UI->>O: invoke(question, history)
+    O->>L: Route + reason (system prompt)
+    L-->>O: Tool call → specialist
+    O->>S: Call specialist as tool
+    S->>R: retrieve_topic(query, topic_id)
+    R->>C: Vector search
+    C-->>R: Top-k chunks + metadata
+    R-->>S: Context with citations
+    S->>L: Answer with retrieved context
+    L-->>S: Grounded answer
+    S-->>O: Answer + citations
+    O-->>UI: Stream response
+    UI->>H: Persist Q&A pair
+    H->>C: Upsert to chat_history
+    UI-->>U: Rendered answer with sources
+```
 
 See `docs/superpowers/specs/` for full design specifications.
 

@@ -41,7 +41,7 @@ In `pyproject.toml`, add to the `dependencies` list:
 
 - [ ] **Step 2: Install dependencies**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv sync`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv sync`
 Expected: Dependencies install successfully.
 
 - [ ] **Step 3: Commit**
@@ -76,7 +76,7 @@ def test_wikipedia_defaults():
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_zim_config.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_zim_config.py -v`
 Expected: FAIL with `ImportError: cannot import name 'WIKIPEDIA_ZIM_PATHS'`
 
 - [ ] **Step 3: Add config constants to src/config.py**
@@ -94,7 +94,7 @@ WIKIPEDIA_RESULTS: int = int(os.getenv("WIKIPEDIA_RESULTS", "5"))
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_zim_config.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_zim_config.py -v`
 Expected: PASS
 
 - [ ] **Step 5: Commit**
@@ -217,7 +217,7 @@ class TestSearchZim:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_zim_reader.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_zim_reader.py -v`
 Expected: FAIL with `ModuleNotFoundError: No module named 'src.tools.zim_reader'`
 
 - [ ] **Step 3: Implement zim_reader module**
@@ -360,7 +360,7 @@ def search_multiple_zim(
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_zim_reader.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_zim_reader.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Commit**
@@ -472,7 +472,7 @@ class TestSearchAndRankZim:
 
 - [ ] **Step 2: Run tests to verify they fail**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_retrieval_wikipedia.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_retrieval_wikipedia.py -v`
 Expected: FAIL with `ImportError` or `AttributeError`
 
 - [ ] **Step 3: Add Wikipedia retrieval functions to retrieval.py**
@@ -609,12 +609,12 @@ Also add `from pathlib import Path` to the imports at top of `retrieval.py` if n
 
 - [ ] **Step 4: Run tests to verify they pass**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_retrieval_wikipedia.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_retrieval_wikipedia.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 5: Run existing retrieval tests to ensure no regression**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_retrieval.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_retrieval.py -v`
 Expected: All existing tests still PASS
 
 - [ ] **Step 6: Commit**
@@ -679,7 +679,7 @@ In `_build_system_prompt()`, after the available/unavailable topic logic, add:
 
 - [ ] **Step 5: Run full test suite to check for regressions**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/ -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/ -v`
 Expected: All tests PASS
 
 - [ ] **Step 6: Commit**
@@ -767,7 +767,7 @@ In `app.py`, inside the `with tab_kb:` block, after the `st.divider()` on line 7
 
 - [ ] **Step 2: Manually test the UI**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run streamlit run app.py`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run streamlit run app.py`
 
 Verify:
 1. Navigate to Knowledge Base tab
@@ -824,7 +824,7 @@ class TestWikipediaConfigPersistence:
 
 - [ ] **Step 2: Run tests**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/test_retrieval_wikipedia.py -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/test_retrieval_wikipedia.py -v`
 Expected: All tests PASS
 
 - [ ] **Step 3: Commit**
@@ -840,12 +840,12 @@ git commit -m "test: add Wikipedia config persistence integration tests"
 
 - [ ] **Step 1: Run full test suite**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run pytest tests/ -v`
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run pytest tests/ -v`
 Expected: All tests PASS
 
 - [ ] **Step 2: Verify import chain works end-to-end**
 
-Run: `cd D:/Downloads/Projects/ai_arena/887 && uv run python -c "from src.tools.retrieval import retrieve_wikipedia; print('OK')"` 
+Run: `cd D:/Downloads/Projects/ai_arena/techtrainer-ai && uv run python -c "from src.tools.retrieval import retrieve_wikipedia; print('OK')"` 
 Expected: `OK`
 
 - [ ] **Step 3: Commit any remaining changes**

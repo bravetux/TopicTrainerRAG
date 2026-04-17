@@ -4,7 +4,7 @@
 -->
 # TechTrainer AI — Design Specification
 **Date:** 2026-03-28
-**Project:** AG-UC-0887 | Madurai | Applied AI
+**Project:** TechTrainer AI | Madurai | Applied AI
 **Author:** B.Vignesh Kumar aka bravetux <ic19939@gmail.com>
 **Status:** Approved
 

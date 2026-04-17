@@ -50,7 +50,7 @@ In `pyproject.toml`, in the `dependencies` list, add `"litellm>=1.0.0",` after t
 
 - [ ] **Step 2: Install the new dependency**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv sync`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv sync`
 Expected: Resolves and installs `litellm` and its transitive deps. No errors.
 
 - [ ] **Step 3: Verify LiteLLMModel is importable from Strands**
@@ -247,7 +247,7 @@ class TestGetModel:
 
 - [ ] **Step 5: Run tests to confirm they fail**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run --with pytest pytest tests/test_provider_manager.py -v`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run --with pytest pytest tests/test_provider_manager.py -v`
 Expected: All FAIL with `ModuleNotFoundError` or `ImportError` — `provider_manager` doesn't exist yet.
 
 - [ ] **Step 6: Create `src/tools/provider_manager.py`**
@@ -566,20 +566,20 @@ def _test_gemini(cfg: dict, t0: float) -> dict:
 
 - [ ] **Step 7: Run tests to verify they pass**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run --with pytest pytest tests/test_provider_manager.py -v`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run --with pytest pytest tests/test_provider_manager.py -v`
 Expected: All tests PASS.
 
 If `TestGetModel::test_bedrock_provider_returns_bedrock_model` fails because `BedrockModel` is imported directly at module level rather than being patchable, update the test patch target. The function `get_model()` imports `BedrockModel` as `from strands.models.bedrock import BedrockModel as _BM` inside the function body, so the patch target is `"strands.models.bedrock.BedrockModel"` — update the two `TestGetModel` test patches to use `"strands.models.bedrock.BedrockModel"` if `"src.tools.provider_manager.BedrockModel"` doesn't work.
 
 - [ ] **Step 8: Run the full test suite**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run --with pytest pytest tests/ -q`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run --with pytest pytest tests/ -q`
 Expected: All tests pass (or same failures as before this task).
 
 - [ ] **Step 9: Commit**
 
 ```bash
-cd "D:\Downloads\Projects\ai_arena\887" && git add pyproject.toml src/tools/provider_manager.py tests/test_provider_manager.py && git commit -m "feat(provider): add provider_manager with get_model() factory and multi-provider support"
+cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && git add pyproject.toml src/tools/provider_manager.py tests/test_provider_manager.py && git commit -m "feat(provider): add provider_manager with get_model() factory and multi-provider support"
 ```
 
 ---
@@ -735,18 +735,18 @@ Read the file first. Apply the same pattern:
 
 - [ ] **Step 8: Verify all imports work**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run python -c "from src.agents.orchestrator import build_orchestrator; from src.agents.qa_agent import qa_training_agent; from src.agents.etl_agent import etl_training_agent; from src.agents.quiz_agent import quiz_agent; from src.agents.learning_path_agent import learning_path_agent; from src.agents.content_author_agent import content_author_agent; from src.agents.progress_agent import progress_agent; print('All agents OK')"`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run python -c "from src.agents.orchestrator import build_orchestrator; from src.agents.qa_agent import qa_training_agent; from src.agents.etl_agent import etl_training_agent; from src.agents.quiz_agent import quiz_agent; from src.agents.learning_path_agent import learning_path_agent; from src.agents.content_author_agent import content_author_agent; from src.agents.progress_agent import progress_agent; print('All agents OK')"`
 Expected: `All agents OK`
 
 - [ ] **Step 9: Run the full test suite**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run --with pytest pytest tests/ -q`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run --with pytest pytest tests/ -q`
 Expected: All tests pass.
 
 - [ ] **Step 10: Commit**
 
 ```bash
-cd "D:\Downloads\Projects\ai_arena\887" && git add src/agents/ && git commit -m "refactor(agents): replace hardcoded BedrockModel with get_model() factory for multi-provider support"
+cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && git add src/agents/ && git commit -m "refactor(agents): replace hardcoded BedrockModel with get_model() factory for multi-provider support"
 ```
 
 ---
@@ -826,18 +826,18 @@ Insert the connection status indicator ABOVE that line:
 
 - [ ] **Step 5: Verify syntax**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run python -c "import ast; ast.parse(open('app.py', encoding='utf-8').read()); print('syntax OK')"`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run python -c "import ast; ast.parse(open('app.py', encoding='utf-8').read()); print('syntax OK')"`
 Expected: `syntax OK`
 
 - [ ] **Step 6: Run the full test suite**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run --with pytest pytest tests/ -q`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run --with pytest pytest tests/ -q`
 Expected: All tests pass.
 
 - [ ] **Step 7: Commit**
 
 ```bash
-cd "D:\Downloads\Projects\ai_arena\887" && git add app.py && git commit -m "feat(ui): update subtitle to Skill Engineering; add sidebar connection status indicator"
+cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && git add app.py && git commit -m "feat(ui): update subtitle to Skill Engineering; add sidebar connection status indicator"
 ```
 
 ---
@@ -1080,16 +1080,16 @@ with tab_settings:
 
 - [ ] **Step 4: Verify syntax**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run python -c "import ast; ast.parse(open('app.py', encoding='utf-8').read()); print('syntax OK')"`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run python -c "import ast; ast.parse(open('app.py', encoding='utf-8').read()); print('syntax OK')"`
 Expected: `syntax OK`
 
 - [ ] **Step 5: Run the full test suite**
 
-Run: `cd "D:\Downloads\Projects\ai_arena\887" && uv run --with pytest pytest tests/ -q`
+Run: `cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && uv run --with pytest pytest tests/ -q`
 Expected: All tests pass.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-cd "D:\Downloads\Projects\ai_arena\887" && git add app.py && git commit -m "feat(ui): add Settings tab with multi-provider selector, credential input, connection test, and restart"
+cd "D:\Downloads\Projects\ai_arena\techtrainer-ai" && git add app.py && git commit -m "feat(ui): add Settings tab with multi-provider selector, credential input, connection test, and restart"
 ```

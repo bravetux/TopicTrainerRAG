@@ -5,7 +5,7 @@
 # Topic Classification Control — Design Specification
 
 **Date:** 2026-04-07
-**Project:** AG-UC-0887 | TechTrainer AI
+**Project:** TechTrainer AI
 **Status:** Approved
 
 ---
