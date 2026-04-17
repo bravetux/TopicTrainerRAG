@@ -129,16 +129,16 @@ if errorlevel 1 (
 echo [6/6] Launching TechTrainer AI...
 echo.
 echo ============================================================
-echo   App starting at: http://localhost:8501
+echo   App starting at: http://localhost:8502
 echo   Press Ctrl+C in this window to stop the server.
 echo ============================================================
 echo.
 
 :: Open browser after a short delay (let Streamlit boot first)
-start "" /b cmd /c "timeout /t 3 >nul && start http://localhost:8501"
+start "" /b cmd /c "timeout /t 3 >nul && start http://localhost:8502"
 
 :: Start Streamlit
-uv run streamlit run app.py --server.port 8501 --server.headless false
+uv run streamlit run app.py --server.port 8502 --server.headless false
 goto :eof
 
 :error

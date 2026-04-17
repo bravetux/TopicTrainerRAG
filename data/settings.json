@@ -17,5 +17,9 @@
     "adf": "custom",
     "vxworks": "builtin",
     "linux_c_programming": "builtin"
-  }
+  },
+  "wikipedia_enabled": true,
+  "wikipedia_zim_paths": [
+    "D:/Downloads/Projects/ai_arena/887/zim/wikipedia_en_100_mini_2026-01.zim"
+  ]
 }

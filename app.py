@@ -334,24 +334,6 @@ with st.sidebar:
     st.metric("Total Quizzes Taken", total_quizzes)
     st.divider()
     st.divider()
-    _status = st.session_state.get("connection_status", {"ok": None})
-    _cfg = get_effective_config()
-    _label = _cfg.get("provider_label", "AI Provider")
-    if _status.get("ok") is True:
-        st.markdown(
-            f'<span style="color:#4ade80">● {_label} · Connected</span>',
-            unsafe_allow_html=True,
-        )
-    elif _status.get("ok") is False:
-        st.markdown(
-            f'<span style="color:#ef4444">● {_label} · Disconnected</span>',
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            f'<span style="color:#94a3b8">● {_label} · Checking...</span>',
-            unsafe_allow_html=True,
-        )
     st.caption("TechTrainer AI v1.0")
     st.divider()
     st.caption("Developed by B.Vignesh Kumar\nic19939@gmail.com")
@@ -812,11 +794,28 @@ with tab_kb:
             st.info("No ZIM files configured yet.")
 
         # Add new ZIM path
-        new_path = st.text_input(
-            "ZIM file path",
-            placeholder="e.g. D:/data/wikipedia_en_computer.zim",
-            key="wiki_new_path",
-        )
+        browse_col, input_col = st.columns([1, 3])
+        with browse_col:
+            if st.button("📂 Browse", key="wiki_browse"):
+                import tkinter as tk
+                from tkinter import filedialog
+                root = tk.Tk()
+                root.withdraw()
+                root.attributes("-topmost", True)
+                file_path = filedialog.askopenfilename(
+                    title="Select ZIM File",
+                    filetypes=[("ZIM files", "*.zim"), ("All files", "*.*")],
+                )
+                root.destroy()
+                if file_path:
+                    st.session_state["wiki_new_path"] = file_path
+                    st.rerun()
+        with input_col:
+            new_path = st.text_input(
+                "ZIM file path",
+                placeholder="e.g. D:/data/wikipedia_en_computer.zim",
+                key="wiki_new_path",
+            )
         if st.button("Add ZIM File", key="wiki_add"):
             if new_path.strip():
                 from pathlib import Path as P
